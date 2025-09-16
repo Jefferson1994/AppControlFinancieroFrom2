@@ -18,7 +18,7 @@ import { AgregarColaboradorComponent } from "../agregar-colaborador/agregar-cola
 export class VerEmpresasComponent implements OnInit {
 
   empresas: EmpresasInterfas[] = [];
-  
+
   loading = true;
   modoSeleccionProducto = false;
   modoSeleccionServices = false;
@@ -80,6 +80,8 @@ export class VerEmpresasComponent implements OnInit {
       this.loading = false;
     }
   }
+
+  ACTUALIZAR(){}
 
   navegarACrearEmpresa(): void {
     console.log("a pantalla crear empresang serve")
