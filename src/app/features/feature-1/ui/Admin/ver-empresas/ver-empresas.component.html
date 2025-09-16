@@ -1,0 +1,76 @@
+<div class="empresas-container">
+  <div *ngIf="loading" class="loading-message">
+    <p>Cargando empresas...</p>
+  </div>
+
+  <div *ngIf="!loading && empresas.length === 0" class="no-empresas-message">
+    <p>No se encontraron empresas para este administrador.</p>
+  </div>
+
+  <div *ngIf="!loading && empresas.length > 0" class="cards-grid">
+    <div class="card" *ngFor="let empresa of empresas">
+      <div class="card-header">
+        <h3 class="card-title">{{ empresa.nombre }}</h3>
+        <span class="card-status" [ngClass]="empresa.activo ? 'active' : 'inactive'">
+          {{ empresa.activo ? 'Activa' : 'Inactiva' }}
+        </span>
+      </div>
+      <div class="card-body">
+        <p><strong>RUC:</strong> {{ empresa.ruc }}</p>
+        <p><strong>Código:</strong> {{ empresa.codigo_establecimiento }}</p>
+        <p><strong>Tipo:</strong> {{ empresa.tipoEmpresa.nombre }}</p>
+        <p><strong>Dirección:</strong> {{ empresa.direccion }}, {{ empresa.datosContactoEmpresa.ciudad }}</p>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary" (click)="openDetalleEmpresa(empresa)" >Ver Detalles</button>
+
+        <button class="btn btn-secondary"
+                (click)="openProductModal(empresa)"
+                *ngIf="modoSeleccionProducto">
+          Crear Producto
+        </button>
+        <button class="btn btn-secondary"
+                (click)="openServiciosModal(empresa)"
+                *ngIf="modoSeleccionServices">
+          Crear Servicio
+        </button>
+        <button class="btn btn-secondary"
+                (click)=" openAgregarColaboradorModal(empresa)"
+                *ngIf="modoAgregarColaborador">
+          Agregar Colaborador
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="create-company-btn-container">
+    <button class="btn btn-secondary create-btn"
+            *ngIf="crearEmpresa"
+            (click)="navegarACrearEmpresa()">
+      Crear Empresa
+    </button>
+  </div>
+
+  <app-crear-producto
+    *ngIf="showProductModal && selectedEmpresaId && selectedEmpresaNombre"
+    [idEmpresa]="selectedEmpresaId"
+    [nombreEmpresa]="selectedEmpresaNombre"
+    (modalClosed)="onModalClosed()">
+  </app-crear-producto>
+  <app-crear-servicio
+  *ngIf="showProductModalServicio && selectedEmpresaId && selectedEmpresaNombre"
+    [idEmpresa]="selectedEmpresaId"
+    [nombreEmpresa]="selectedEmpresaNombre"
+    (modalClosed)="onModalClosed()">
+
+  </app-crear-servicio>
+  <app-agregar-colaborador
+  *ngIf="modoAgregarColaborador && selectedEmpresaId && selectedEmpresaNombre"
+    [idEmpresa]="selectedEmpresaId"
+    [nombreEmpresa]="selectedEmpresaNombre"
+    (modalClosed)="onModalClosed()">
+
+  </app-agregar-colaborador>
+
+
+</div>

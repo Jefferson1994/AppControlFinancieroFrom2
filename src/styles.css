@@ -1,0 +1,28 @@
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.layout-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar-menu {
+  flex-shrink: 0;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem;
+  background: #f9fafb;
+  overflow: auto;
+}
+.dashboard-footer {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  background: #f3f4f6;
+}

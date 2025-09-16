@@ -1,0 +1,27 @@
+<aside class="sidebar-container" [ngClass]="{ 'is-open': isOpen, 'is-closed': !isOpen }">
+  <nav>
+    @for (item of navItems; track item.name) {
+      <div class="menu-item-wrapper">
+        <button
+          (click)="onViewSelected(item.view)"
+          class="menu-item"
+          [class.active]="currentView === item.view">
+          <svg class="menu-icon" viewBox="0 0 24 24">
+            <path [attr.d]="item.svgPath" />
+          </svg>
+          <span class="menu-label" [class.visible]="isOpen">{{ item.name }}</span>
+        </button>
+
+        @if (item.subItems.length > 0 && currentView === item.view && isOpen) {
+          <div class="submenu-container">
+            @for (subItem of item.subItems; track subItem.name) {
+              <a (click)="onViewSelected(subItem.view)" class="submenu-item">
+                {{ subItem.name }}
+              </a>
+            }
+          </div>
+        }
+      </div>
+    }
+  </nav>
+</aside>

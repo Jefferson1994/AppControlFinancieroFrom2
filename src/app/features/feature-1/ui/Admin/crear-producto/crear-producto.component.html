@@ -1,0 +1,54 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <button class="close-button" (click)="closeModal()">×</button>
+
+    <div class="form-container">
+      <h1>Crear Producto</h1>
+      <p class="subtitle">Empresa : <strong>{{ nombreEmpresa }}</strong></p>
+
+      <form (ngSubmit)="onSubmit(productoForm)" #productoForm="ngForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nombre">Nombre del Producto</label>
+            <input type="text" id="nombre" name="nombre" [(ngModel)]="producto().nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="tipoProducto">Tipo de Producto</label>
+            <select id="tipoProducto" name="id_tipo_producto" [(ngModel)]="producto().id_tipo_producto" required>
+              <option value="" disabled selected>Selecciona un tipo</option>
+              <option value="1">Shampoo</option>
+              <option value="2">Acondicionador</option>
+              <option value="3">Crema para Afeitar</option>
+              <option value="4">Cera Fijadora</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" [(ngModel)]="producto().descripcion" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="precioVenta">Precio de Venta</label>
+            <input type="number" id="precioVenta" name="precio_venta" [(ngModel)]="producto().precio_venta" required min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="precioPromocion">Precio de Promoción (opcional)</label>
+            <input type="number" id="precioPromocion" name="precio_promocion" [(ngModel)]="producto().precio_promocion" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="precioDescuento">Precio con Descuento (opcional)</label>
+            <input type="number" id="precioDescuento" name="precio_descuento" [(ngModel)]="producto().precio_descuento" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="stock">Stock Actual</label>
+            <input type="number" id="stock" name="stock_actual" [(ngModel)]="producto().stock_actual" required min="0">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!productoForm.valid">Crear Producto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

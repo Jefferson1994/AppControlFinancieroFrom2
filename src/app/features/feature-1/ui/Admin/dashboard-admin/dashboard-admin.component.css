@@ -1,0 +1,77 @@
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* ocupa pantalla completa */
+}
+
+/* Header arriba */
+.layout-header {
+  flex: 0 0 auto;
+  z-index: 20;
+}
+
+/* Contenedor principal: izquierda sidebar, derecha main */
+.layout-container {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0; /* permite que el main haga scroll interno */
+}
+
+/* Sidebar: ancho controlado por el host del componente del menú */
+.sidebar-menu {
+  flex: 0 0 auto; /* respeta el ancho del host */
+  height: 100%;
+  display: block;
+}
+/* Contenido principal: sin centrar verticalmente */
+.main-content {
+  flex: 1 1 auto;
+  min-width: 0; /* evita overflow por contenido ancho */
+  min-height: 0; /* importante para scroll dentro del flex */
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: block; /* Asegura que NO se centre verticalmente por accidente */
+  align-items: initial;
+  justify-content: initial;
+}
+
+/* Footer */
+.dashboard-footer {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  background: #f3f4f6;
+}
+
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* toda la pantalla */
+}
+
+/* Header fijo arriba */
+.layout-header {
+  flex-shrink: 0;
+}
+
+/* Contenedor del menú y el main */
+.layout-container {
+  display: flex;
+  flex: 1;              /* que ocupe todo lo que queda debajo del header */
+  min-height: 0;        /* importante para que no se rompa en flexbox */
+}
+
+/* Sidebar: que respete su ancho */
+.sidebar-menu {
+  flex-shrink: 0;       /* nunca se achica */
+  display: flex;        /* asegura que el aside crezca bien */
+}
+
+/* Main: que ocupe el resto */
+.main-content {
+  flex: 1;
+  padding: 1rem;
+  background: #f9fafb;
+  overflow: auto;       /* scroll si es muy largo */
+}
+

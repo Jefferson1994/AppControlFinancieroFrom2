@@ -1,0 +1,24 @@
+<div class="dashboard-layout">
+  <app-head-admin
+    class="layout-header"
+    (toggleSidebarEvent)="handleToggleSidebar()">
+  </app-head-admin>
+
+  <div class="layout-container">
+    <app-menu-admin
+      class="sidebar-menu"
+      [isOpen]="sidebarOpen()"
+      [navItems]="navItems"
+      [currentView]="currentView()"
+      (viewSelected)="handleViewChange($event)">
+    </app-menu-admin>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  <footer class="dashboard-footer">
+    <p>&copy; 2025 Jeff proyecto .</p>
+  </footer>
+</div>

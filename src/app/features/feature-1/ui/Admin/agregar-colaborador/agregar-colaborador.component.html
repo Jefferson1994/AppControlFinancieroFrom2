@@ -1,0 +1,54 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <button class="close-button" (click)="onCancel()">×</button>
+
+    <div class="form-container">
+      <h1>Agregar Colaborador</h1>
+      <p class="subtitle">Empresa: <strong>{{ nombreEmpresa }}</strong> </p>
+
+      <form #colaboradorForm="ngForm">
+        <p class="section-text">
+          Ingresa la cédula del colaborador.
+          <span *ngIf="camposBloqueados()" class="success">¡Colaborador encontrado!</span>
+        </p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="cedula">Cédula / Identificación</label>
+            <input
+              type="text"
+              id="cedula"
+              name="cedula"
+              [(ngModel)]="cedulaData().cedula"
+              (ngModelChange)="onBuscarColaborador()"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" [(ngModel)]="colaboradorData().nombre" [disabled]="camposBloqueados()">
+          </div>
+          <div class="form-group">
+            <label for="correo">Correo</label>
+            <input type="text" id="correo" name="correo" [(ngModel)]="colaboradorData().correo" [disabled]="camposBloqueados()">
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono</label>
+            <input type="text" id="telefono" name="numero_telefono" [(ngModel)]="colaboradorData().numero_telefono" [disabled]="camposBloqueados()">
+          </div>
+          <div class="form-group">
+            <label for="puntoEmision">Código de Punto de Emisión Móvil</label>
+            <input type="text" id="puntoEmision" name="codigo_punto_emision_movil" [(ngModel)]="colaboradorData().codigo_punto_emision_movil" [disabled]="desbloquepunto()" required>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" (click)="onAgregarColaborador()" [disabled]="!colaboradorForm.valid || !camposBloqueados()">
+            Agregar Colaborador
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,182 @@
+.stepper-form-container {
+  max-width: 700px; /* ✅ Reducimos el ancho máximo */
+  margin: 30px auto; /* Reducimos el margen */
+  padding: 25px; /* Reducimos el padding */
+  background-color: #ffffff;
+  border-radius: 10px; /* Bordes más sutiles */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px; /* Reducimos el margen */
+  font-size: 1.8rem; /* Tamaño de fuente normal */
+}
+
+.progress-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px; /* Reducimos el margen */
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+
+.progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #e0e0e0;
+  z-index: 1;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.step-circle {
+  width: 35px; /* Reducimos el tamaño */
+  height: 35px;
+  border-radius: 50%;
+  background-color: #bdbdbd;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+
+.step.active .step-circle {
+  background-color: #3498db;
+}
+
+.step-label {
+  font-size: 0.8em; /* Reducimos el tamaño */
+  color: #888;
+  font-weight: bold;
+}
+
+.step.active .step-label {
+  color: #3498db;
+}
+
+.form-section {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 15px; /* Reducimos el margen */
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px; /* ✅ Reducimos la separación a un valor estándar */
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 8px; /* Reducimos el margen */
+  color: #555;
+  display: block;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px; /* Reducimos el padding */
+  border: 1px solid #ddd;
+  border-radius: 6px; /* Bordes más sutiles */
+  font-size: 0.9em;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* Reducimos el espacio */
+  margin-top: 25px; /* Reducimos el margen */
+}
+
+.btn {
+  padding: 10px 20px; /* Reducimos el padding */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  font-size: 0.9em;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #ecf0f1;
+  color: #333;
+}
+
+.btn:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+  color: #aaa;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-groupTime {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-groupTime label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+  display: block;
+}
+
+.form-groupTime input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 0.9em;
+  transition: border-color 0.3s;
+}

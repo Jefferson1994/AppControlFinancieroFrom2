@@ -1,0 +1,92 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  padding: 15px 20px;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+nav {
+  display: flex;
+  gap: 10px; /* Esto agrega el espacio entre los botones */
+}
+
+nav a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  padding: 8px 15px; /* Ajusta el tamaño de los "botones" */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #f0f0f0;
+    color: #000;
+    border-color: #ccc;
+  }
+}
+.main-content {
+  flex: 1; /* Esto es CLAVE: hace que el contenido principal se estire */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-container {
+  height: 500px; /* Ajusta la altura del mapa según tu diseño */
+  width: 100%;
+}
+
+.filter-container {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centra el contenedor de filtros */
+  display: flex;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 250px;
+}
+
+.footer {
+  /* Estilos para tu pie de página */
+  padding: 20px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+}
+
+
+

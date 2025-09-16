@@ -1,0 +1,122 @@
+.empresas-container {
+  padding: 30px; /* Reducido de 40px */
+}
+
+.cards-grid {
+  display: grid;
+  /* Reducimos el tamaño mínimo de la tarjeta a 300px */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px; /* Reducido de 30px */
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 10px; /* Reducido de 12px */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px); /* Reducido de -5px */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* Sombra más sutil */
+}
+
+.card-header {
+  padding: 15px; /* Reducido de 20px */
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.25rem; /* Reducido de 1.5rem */
+}
+
+.card-status {
+  padding: 5px 10px; /* Reducido de 6px 12px */
+  border-radius: 5px;
+  font-size: 0.8rem; /* Reducido de 0.9rem */
+  font-weight: bold;
+  color: white;
+}
+
+.card-status.active {
+  background-color: #28a745;
+}
+
+.card-status.inactive {
+  background-color: #dc3545;
+}
+
+.card-body {
+  padding: 15px; /* Reducido de 20px */
+  flex-grow: 1;
+}
+
+.card-body p {
+  margin: 0 0 8px 0; /* Reducido de 10px */
+  line-height: 1.5; /* Reducido de 1.6 */
+  font-size: 0.9rem; /* Reducido de 1rem */
+  color: #555;
+}
+
+.card-footer {
+  padding: 15px; /* Reducido de 20px */
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  gap: 8px; /* Reducido de 10px */
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 10px 20px; /* Reducido de 12px 24px */
+  border: none;
+  border-radius: 6px; /* Reducido de 8px */
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #e9ecef;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: #dae0e5;
+}
+
+.create-company-btn-container {
+  margin-top: 30px; /* Reducido de 40px */
+  text-align: center;
+}
+
+.create-btn {
+  padding: 12px 24px; /* Reducido de 14px 28px */
+  background-color: #f39c12;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.create-btn:hover {
+  background-color: #e67e22;
+}

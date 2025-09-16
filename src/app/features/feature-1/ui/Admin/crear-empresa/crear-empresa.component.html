@@ -1,0 +1,99 @@
+<div class="stepper-form-container">
+  <h1>Registra tu empresa</h1>
+  <div class="progress-bar">
+    <div class="step" [class.active]="currentStep() === 1">
+      <div class="step-circle">1</div>
+      <span class="step-label">Información General</span>
+    </div>
+    <div class="step" [class.active]="currentStep() === 2">
+      <div class="step-circle">2</div>
+      <span class="step-label">Datos de Contacto</span>
+    </div>
+  </div>
+
+  <form #stepForm="ngForm">
+    <div *ngIf="currentStep() === 1" class="form-section fade-in" ngModelGroup="informacion_general">
+      <h2>Información General</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nombre">Nombre de la Empresa</label>
+          <input type="text" id="nombre" name="nombre" ngModel required>
+        </div>
+        <div class="form-group">
+          <label for="ruc">RUC</label>
+          <input type="text" id="ruc" name="ruc" ngModel required>
+        </div>
+        <div class="form-group full-width">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" name="descripcion" rows="5" ngModel required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="tipoEmpresa">Tipo de Empresa</label>
+          <select id="tipoEmpresa" name="id_tipo_empresa" ngModel required>
+            <option value="1">Barbería</option>
+            <option value="2">Salón de Belleza</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="direccion">Dirección</label>
+          <input type="text" id="direccion" name="direccion" ngModel required>
+        </div>
+        <div class="form-groupTime">
+          <label for="horarioApertura">Horario de Apertura</label>
+          <input type="time" id="horarioApertura" name="horario_apertura" ngModel required>
+        </div>
+        <div class="form-groupTime">
+          <label for="horarioCierre">Horario de Cierre</label>
+          <input type="time" id="horarioCierre" name="horario_cierre" ngModel required>
+        </div>
+      </div>
+      <div class="button-group">
+        <button type="button" class="btn btn-primary" (click)="nextStep(stepForm)" [disabled]="!stepForm.valid">
+          Siguiente
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="currentStep() === 2" class="form-section fade-in" ngModelGroup="datos_contacto">
+      <h2>Ya casi terminamos...</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono_contacto" ngModel required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email_contacto" ngModel required>
+        </div>
+        <div class="form-group">
+          <label for="ciudad">Ciudad</label>
+          <input type="text" id="ciudad" name="ciudad" ngModel required>
+        </div>
+        <div class="form-group">
+          <label for="provincia">Provincia</label>
+          <input type="text" id="provincia" name="provincia" ngModel required>
+        </div>
+        <div class="form-group">
+          <label for="pais">País</label>
+          <input type="text" id="pais" name="pais" ngModel required>
+        </div>
+        <div class="form-group full-width">
+          <label for="latitud">Latitud</label>
+          <input type="number" id="latitud" name="latitud" ngModel>
+        </div>
+        <div class="form-group full-width">
+          <label for="longitud">Longitud</label>
+          <input type="number" id="longitud" name="longitud" ngModel>
+        </div>
+      </div>
+      <div class="button-group">
+        <button type="button" class="btn btn-secondary" (click)="prevStep()">
+          Atrás
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit(stepForm)" [disabled]="!stepForm.valid">
+          Registrar Empresa
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,80 @@
+<div class="form-container">
+  <h1>Detalles de la Empresa</h1>
+
+  <div class="edit-mode-toggle">
+    <input type="checkbox" id="editToggle" [checked]="modoEdicion()" (change)="toggleEditMode()">
+    <label for="editToggle">Editar la empresa</label>
+  </div>
+
+  <form #empresaForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="empresa as empresaData">
+    <h2>Información General</h2>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="nombre">Nombre de la Empresa</label>
+        <input type="text" id="nombre" name="nombre"  [(ngModel)]="empresa.nombre" required [disabled]="true">
+      </div>
+      <div class="form-group">
+        <label for="ruc">RUC</label>
+        <input type="text" id="ruc" name="ruc" [(ngModel)]="empresaData.ruc" required [disabled]="true">
+      </div>
+      <div class="form-group full-width">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion" [(ngModel)]="empresaData.descripcion" required rows="4" [disabled]="!modoEdicion()"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="tipoEmpresa">Tipo de Empresa</label>
+        <select id="tipoEmpresa" name="id_tipo_empresa" [(ngModel)]="empresaData.tipoEmpresa" required [disabled]="!modoEdicion()">
+          <option value="1">Barbería</option>
+          <option value="2">Salón de Belleza</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="direccion">Dirección</label>
+        <input type="text" id="direccion" name="direccion" [(ngModel)]="empresaData.direccion" required [disabled]="!modoEdicion()">
+      </div>
+      <div class="form-group">
+        <label for="horarioApertura">Horario de Apertura</label>
+        <input type="time" id="horarioApertura" name="horario_apertura" [(ngModel)]="empresaData.horario_apertura" required [disabled]="!modoEdicion()">
+      </div>
+      <div class="form-group">
+        <label for="horarioCierre">Horario de Cierre</label>
+        <input type="time" id="horarioCierre" name="horario_cierre" [(ngModel)]="empresaData.horario_cierre" required [disabled]="!modoEdicion()">
+      </div>
+    </div>
+
+    <h2>Datos de Contacto</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" name="datos_contacto.telefono_contacto" [(ngModel)]="empresaData.datosContactoEmpresa.telefono_contacto" required [disabled]="!modoEdicion()">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="datos_contacto.email_contacto" [(ngModel)]="empresaData.datosContactoEmpresa.email_contacto" required [disabled]="!modoEdicion()">
+      </div>
+      <div class="form-group full-width">
+        <label for="ubicacion">Ubicación en el Mapa</label>
+        <textarea id="ubicacion" name="ubicacion" rows="10" [disabled]="!modoEdicion()">Aquí irá el mapa...</textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="onCancel()"
+        *ngIf="modoEdicion()">
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        *ngIf="modoEdicion()"
+        [disabled]="!empresaForm.valid">
+        Guardar Cambios
+      </button>
+    </div>
+  </form>
+</div>

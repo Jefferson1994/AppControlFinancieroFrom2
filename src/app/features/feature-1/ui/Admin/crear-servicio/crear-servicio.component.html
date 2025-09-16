@@ -1,0 +1,64 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <button class="close-button" (click)="onCancel()">×</button>
+
+    <div class="form-container">
+      <h1>Crear Servicio</h1>
+      <p class="subtitle">Empresa: <strong>{{ nombreEmpresa }}</strong></p>
+
+      <form (ngSubmit)="onSubmit(servicioForm)" #servicioForm="ngForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nombre">Nombre del Servicio</label>
+            <input type="text" id="nombre" name="nombre" [(ngModel)]="servicio().nombre" required>
+          </div>
+
+          <div class="form-group">
+            <label for="tipoServicio">Tipo de Servicio</label>
+            <select id="tipoServicio" name="id_tipo_servicio" [(ngModel)]="servicio().id_tipo_servicio" required>
+              <option value="" disabled selected>Selecciona un tipo</option>
+              <option value="1">Corte de Cabello</option>
+              <option value="2">Afeitado de Barba</option>
+              <option value="3">Masaje Facial</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="duracion">Duración (minutos)</label>
+            <input type="number" id="duracion" name="duracion_minutos" [(ngModel)]="servicio().duracion_minutos" required min="1">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" [(ngModel)]="servicio().descripcion" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="precio">Precio</label>
+            <input type="number" id="precio" name="precio" [(ngModel)]="servicio().precio" required min="0" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label for="descuento">Porcentaje de Descuento (opcional)</label>
+            <input type="number" id="descuento" name="porcentaje_descuento" [(ngModel)]="servicio().porcentaje_descuento" min="0" max="100">
+          </div>
+
+          <div class="form-group">
+            <label for="precioDescuento">Precio con Descuento (opcional)</label>
+            <input type="number" id="precioDescuento" name="precio_descuento" [(ngModel)]="servicio().precio_descuento" min="0" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label for="comision">Comisión para Colaborador (%)</label>
+            <input type="number" id="comision" name="porcentaje_comision_colaborador" [(ngModel)]="servicio().porcentaje_comision_colaborador" required min="0" max="100">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!servicioForm.valid">Crear Servicio</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
