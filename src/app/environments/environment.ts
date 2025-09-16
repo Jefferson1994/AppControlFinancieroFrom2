@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000' // Tu URL local
+  apiUrl: 'https://appcontrolbarberias.onrender.com/' // Tu URL local
 };
 /*export const environment = {
   production: true,

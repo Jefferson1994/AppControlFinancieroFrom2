@@ -3,9 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../services/auth.service'
-import { EmpresasInterfas } from '../../../domain/models/empresa.models';
+import { ActualizarrEmpresaDTO, CrearEmpresaDTO, EmpresasInterfas } from '../../../domain/models/empresa.models';
 import { EmpresasXIdUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/empreXId.use.case';
 import { LoadingService } from '../../../services/loading.service';
+import { actualizarEmpresasUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/actualizarEmpresa.use.case';
+import { AlertService } from '../../../services/alert.service';
+
 @Component({
   selector: 'app-ver-empresa-detalle',
   standalone: true,
@@ -17,9 +20,12 @@ export class VerEmpresaDetalleComponent implements OnInit {
 
   // ✅ Señal para controlar el modo de edición, inicia en 'false'
   modoEdicion = signal(false);
+  private alertService = inject(AlertService);
   private loadingService = inject(LoadingService);
 
-  constructor( private authService: AuthService, private obtenerEmpresasUseCase:EmpresasXIdUseCase){
+  constructor( private authService: AuthService, private obtenerEmpresasUseCase:EmpresasXIdUseCase,
+    private actualizarEmpresaUseCase :actualizarEmpresasUseCase
+  ){
 
   }
 
@@ -81,16 +87,61 @@ export class VerEmpresaDetalleComponent implements OnInit {
     }
   }
 
+
   // ✅ Invierte el valor de la señal `modoEdicion` al hacer clic en el checkbox
   toggleEditMode(): void {
     this.modoEdicion.update(value => !value);
   }
 
-  onSubmit(): void {
-    console.log('Datos actualizados:');
-    // Lógica para guardar (no implementada)
-    this.modoEdicion.set(false);
+  async onSubmit(): Promise<void> {
+    if (!this.empresa) {
+      console.error('No hay empresa cargada.');
+      return;
+    }
+
+    try {
+      this.loadingService.show();
+
+      // ✅ Construir DTO con los datos que se enviarán
+      const empresaParaActualizar: ActualizarrEmpresaDTO = {
+        nombre: this.empresa.nombre,
+        descripcion: this.empresa.descripcion,
+        id_tipo_empresa: this.empresa.tipoEmpresa.id, // asegurarse que solo mandas el id
+        direccion: this.empresa.direccion,
+        horario_apertura: this.empresa.horario_apertura,
+        horario_cierre: this.empresa.horario_cierre,
+        datos_contacto: {
+          telefono_contacto: this.empresa.datosContactoEmpresa.telefono_contacto,
+          email_contacto: this.empresa.datosContactoEmpresa.email_contacto,
+          ciudad: "Quito",        
+          provincia: "Pichincha", 
+          pais: "Ecuador",        
+          latitud: -0.1807,       
+          longitud: -78.4678      
+        }
+      };
+
+      console.log('Enviando empresa a actualizar:', JSON.stringify(empresaParaActualizar));
+      const idEmpresaStr = this.route.snapshot.paramMap.get('id_empresa');
+      const idEmpresa = Number(this.route.snapshot.paramMap.get('id_empresa'));
+      const respuesta = await this.actualizarEmpresaUseCase.execute(empresaParaActualizar,idEmpresa);
+
+      console.log('Respuesta de actualización:', respuesta);
+
+      // ✅ Feedback al usuario
+    
+      this.alertService.showSuccess('Empresa actualizada con éxito ');
+
+      this.modoEdicion.set(false); // salir del modo edición
+
+    } catch (error) {
+      console.error('Error al actualizar la empresa:', error);
+      this.alertService.showError('Error al actualizar la empresa  ');
+    } finally {
+      this.loadingService.hide();
+    }
   }
+
 
   onCancel(): void {
     this.modoEdicion.set(false);

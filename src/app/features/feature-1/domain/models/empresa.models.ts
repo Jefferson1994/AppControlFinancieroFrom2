@@ -52,6 +52,24 @@ export interface CrearEmpresaDTO {
     longitud: number;
   };
 }
+
+export interface ActualizarrEmpresaDTO {
+  nombre: string;
+  descripcion: string;
+  id_tipo_empresa: number;
+  direccion: string;
+  horario_apertura: string;
+  horario_cierre: string;
+  datos_contacto: {
+    telefono_contacto: string;
+    email_contacto: string;
+    ciudad: string;
+    provincia: string;
+    pais: string;
+    latitud: number;
+    longitud: number;
+  };
+}
 export interface CrearEmpresaResponse {
   mensaje: string;
   empresa: {

@@ -1,74 +1,78 @@
-/* Contenedor principal del modal (la capa semi-transparente) */
+/* --- Contenedor del modal --- */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-/* Contenido del modal (el formulario) */
 .modal-content {
-  background-color: #ffffff;
-  padding: 30px;
+  background: #fff;
+  padding: 25px 30px;
   border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 600px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 750px;   /* 🔹 más ancho para caber 2 columnas */
+  max-height: 80vh;
+  overflow-y: auto;
   position: relative;
   animation: fadeIn 0.3s ease-in-out;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* --- Botón de cerrar --- */
 .close-button {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 12px;
+  right: 12px;
   background: none;
   border: none;
-  font-size: 1.5em;
+  font-size: 1.4rem;
   cursor: pointer;
   color: #888;
   transition: color 0.2s;
 }
-
 .close-button:hover {
   color: #333;
 }
 
-/* Estilos para el formulario dentro del modal (ajusta según tu diseño) */
-.form-container {
-  /* No necesita max-width si está dentro del modal-content */
-  padding: 0;
-  box-shadow: none;
-  margin: 0;
-}
-
-h1 {
+/* --- Títulos --- */
+.modal-content h1 {
   text-align: center;
-  margin-bottom: 5px;
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+  color: #222;
 }
-
+.modal-content h2 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #444;
+}
 .subtitle {
   text-align: center;
-  color: #777;
-  font-size: 1em;
-  margin-bottom: 30px;
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 25px;
 }
 
+/* --- Grid del formulario (2 columnas) --- */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 40px;
+  grid-template-columns: 1fr 1fr;  /* 🔹 2 columnas */
+  gap: 18px 25px; /* espacio entre columnas y filas */
 }
 
 .form-group {
@@ -77,21 +81,21 @@ h1 {
 }
 
 .form-group label {
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #555;
-  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+  font-size: 0.95rem;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: 1em;
-  transition: border-color 0.3s;
+  font-size: 0.95rem;
+  transition: border-color 0.3s, box-shadow 0.2s;
 }
 
 .form-group input:focus,
@@ -99,36 +103,52 @@ h1 {
 .form-group textarea:focus {
   outline: none;
   border-color: #3498db;
+  box-shadow: 0 0 4px rgba(52, 152, 219, 0.4);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 70px;
 }
 
 .form-group.full-width {
-  grid-column: 1 / -1;
+  grid-column: 1 / -1; /* 🔹 ocupa todo el ancho */
 }
 
+/* --- Acciones del formulario --- */
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 15px;
-  margin-top: 30px;
+  gap: 12px;
+  margin-top: 25px;
+  grid-column: 1 / -1; /* 🔹 botones ocupan toda la fila */
 }
 
 .btn {
-  padding: 12px 25px;
+  padding: 10px 18px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.3s, transform 0.1s;
 }
 
 .btn-primary {
   background-color: #3498db;
   color: white;
 }
+.btn-primary:hover {
+  background-color: #2980b9;
+  transform: scale(1.03);
+}
 
 .btn-secondary {
   background-color: #ecf0f1;
   color: #333;
+}
+.btn-secondary:hover {
+  background-color: #d5dbdb;
 }
 
 .btn:disabled {
@@ -137,3 +157,12 @@ h1 {
   color: #aaa;
 }
 
+/* --- Responsive: en móviles vuelve a 1 columna --- */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 95%;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

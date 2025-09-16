@@ -78,3 +78,10 @@ export interface CrearUsuarioResponse {
     activo: number;
   };
 }
+
+export interface RolUsuario {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  activo: number; 
+}

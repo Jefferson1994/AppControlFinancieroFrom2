@@ -1,9 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 import { CrearEmpresaDTO,CrearEmpresaResponse, EmpresasInterfas
   ,CrearProductoDTO,CrearProductoResponse,CrearServicioDTO,CrearServicioResponse
-  ,AgregarColaboradorDTO,AgregarColaboradorResponse
+  ,AgregarColaboradorDTO,AgregarColaboradorResponse,
+  ActualizarrEmpresaDTO
 } from '../../domain/models/empresa.models'; // Asegúrate de que los paths sean correctos
 import { empresaRepositorio } from '../../domain/repositories/empresaRepositories/empresa.repository'; // El contrato del repositorio
 
@@ -12,7 +14,9 @@ import { empresaRepositorio } from '../../domain/repositories/empresaRepositorie
 })
 export class UserApiRepository implements empresaRepositorio {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:3000/';
+  //private readonly baseUrl = 'http://localhost:3000/';
+  private baseUrl = environment.apiUrl;
+  
 
   async todasEmpresasXAdmin(idAdministrador: number, token: string): Promise<EmpresasInterfas[]> {
     const url = `${this.baseUrl}empresa/todasEmpresasXAdmin`;
@@ -134,18 +138,15 @@ export class UserApiRepository implements empresaRepositorio {
     }
   }
 
-  async CrearEmpresa2(empresa: CrearEmpresaDTO): Promise<CrearEmpresaResponse> {
-    const url = `${this.baseUrl}empresa/crearEmpresa`;
+  async actualizarEmpresa(empresaActualizar: ActualizarrEmpresaDTO, idEmpresa:number): Promise<CrearEmpresaResponse> {
+    const url = `${this.baseUrl}empresa/${idEmpresa}`;
+    console.log("la url para actualizar", url)
     //const body = { CrearEmpresaDTO };
-
     try {
-      // La API devuelve un objeto con la propiedad 'empresas', que es un array.
-      // Tipamos la respuesta para acceder a ese array.
-      const response = await lastValueFrom(
-        //this.http.post<{ empresas: EmpresasInterfas[] }>(url, body)
-        this.http.put<{ empresas: CrearEmpresaResponse }>(url, empresa)
-      );
 
+      const response = await lastValueFrom(
+        this.http.put<{ empresas: CrearEmpresaResponse }>(url, empresaActualizar)
+      );
       return response.empresas;
     } catch (error) {
       // El repositorio solo relanza el error. La lógica de manejo

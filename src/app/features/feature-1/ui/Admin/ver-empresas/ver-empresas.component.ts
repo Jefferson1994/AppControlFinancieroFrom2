@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Import CommonModule for directives like *ngFor and *ngIf
 import { ObtenerEmpresasUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/todasEmpresas.use.case';
 import { EmpresasInterfas } from '../../../../../features/feature-1/domain/models/empresa.models';
@@ -7,6 +7,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CrearProductoComponent } from "../crear-producto/crear-producto.component";
 import { CrearServicioComponent } from "../crear-servicio/crear-servicio.component";
 import { AgregarColaboradorComponent } from "../agregar-colaborador/agregar-colaborador.component";
+import { LoadingService } from '../../../services/loading.service';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-ver-empresas',
@@ -18,6 +20,8 @@ import { AgregarColaboradorComponent } from "../agregar-colaborador/agregar-cola
 export class VerEmpresasComponent implements OnInit {
 
   empresas: EmpresasInterfas[] = [];
+  private alertService = inject(AlertService);
+  private loadingService = inject(LoadingService);
 
   loading = true;
   modoSeleccionProducto = false;
@@ -36,25 +40,37 @@ export class VerEmpresasComponent implements OnInit {
     ,private router: Router,private activatedRoute: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
-    this.cargarEmpresas();
-    this.activatedRoute.url.subscribe(url => {
-      this.modoSeleccionProducto = url[0]?.path === 'seleccionarEmpresaProducto';
-      this.modoSeleccionServices = url[0]?.path === 'seleccionarEmpresaServicio';
-      this.modoAgregarColaborador = url[0]?.path === 'seleccionarEmpresaColaborador';
-      if(this.modoSeleccionServices){
-        this.crearEmpresa=false;
-      }
-      if(this.modoSeleccionProducto){
-        this.crearEmpresa=false;
-      }
-      if(this.modoAgregarColaborador){
-        this.crearEmpresa=false;
-      }
+  async ngOnInit(): Promise<void> {
+  try {
+    this.loadingService.show();
 
+    await this.cargarEmpresas(); // espera a que termine
+
+    this.activatedRoute.url.subscribe({
+      next: url => {
+        this.modoSeleccionProducto = url[0]?.path === 'seleccionarEmpresaProducto';
+        this.modoSeleccionServices = url[0]?.path === 'seleccionarEmpresaServicio';
+        this.modoAgregarColaborador = url[0]?.path === 'seleccionarEmpresaColaborador';
+
+        if (this.modoSeleccionServices || this.modoSeleccionProducto || this.modoAgregarColaborador) {
+          this.crearEmpresa = false;
+        }
+      },
+      error: err => {
+        console.error('Error en la suscripción de la URL:', err);
+        this.alertService.showError('Error al leer la URL.');
+      }
     });
 
+  } catch (error) {
+    console.error('Error en ngOnInit:', error);
+    this.alertService.showError('Ocurrió un error al inicializar la pantalla.');
+  } finally {
+    this.loadingService.hide();
   }
+}
+
+
 
   // En tu componente .ts
 
