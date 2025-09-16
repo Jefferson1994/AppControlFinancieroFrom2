@@ -27,7 +27,10 @@ export class VerEmpresasComponent implements OnInit {
   modoSeleccionProducto = false;
   modoSeleccionServices = false;
   modoAgregarColaborador= false;
+  modoVerColaboradores= false;
   modoDetalleEmpresa= false;
+  modoListaProductosEmpresa= false;
+  modoListaServiciosEmpresa= false;
   crearEmpresa = true;
   showProductModal = false;
   showProductModalServicio = false;
@@ -51,8 +54,14 @@ export class VerEmpresasComponent implements OnInit {
         this.modoSeleccionProducto = url[0]?.path === 'seleccionarEmpresaProducto';
         this.modoSeleccionServices = url[0]?.path === 'seleccionarEmpresaServicio';
         this.modoAgregarColaborador = url[0]?.path === 'seleccionarEmpresaColaborador';
+        this.modoVerColaboradores= url[0]?.path === 'listarColaboradorEmpresa';
+        this.modoListaProductosEmpresa = url[0]?.path === 'listarProductoEmpresa';
+        this.modoListaServiciosEmpresa= url[0]?.path === 'listarServicioEmpresa';
 
-        if (this.modoSeleccionServices || this.modoSeleccionProducto || this.modoAgregarColaborador) {
+
+        if (this.modoSeleccionServices || this.modoSeleccionProducto 
+          || this.modoAgregarColaborador|| this.modoVerColaboradores|| 
+          this.modoListaProductosEmpresa || this.modoListaServiciosEmpresa) {
           this.crearEmpresa = false;
         }
       },
@@ -120,6 +129,20 @@ export class VerEmpresasComponent implements OnInit {
   openDetalleEmpresa(empresa: EmpresasInterfas): void {
     // Usamos el Router para navegar a la ruta y pasar el ID como parámetro
     this.router.navigate(['/admin-dashboard/verDetalleEmpresa', empresa.id]);
+  }
+
+  openListarColaboradores(empresa: EmpresasInterfas): void {
+    // Usamos el Router para navegar a la ruta y pasar el ID como parámetro
+    this.router.navigate(['/admin-dashboard/verTodasColaboradores', empresa.id]);
+  }
+ 
+  openListarProductos(empresa: EmpresasInterfas): void {
+    // Usamos el Router para navegar a la ruta y pasar el ID como parámetro
+    this.router.navigate(['/admin-dashboard/verTodosProductos', empresa.id]);
+  }
+  openListarServicios(empresa: EmpresasInterfas): void {
+    // Usamos el Router para navegar a la ruta y pasar el ID como parámetro
+    this.router.navigate(['/admin-dashboard/verTodosServicios', empresa.id]);
   }
 
   // ✅ New method to close the modal

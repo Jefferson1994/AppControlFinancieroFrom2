@@ -6,9 +6,13 @@ import { VerEmpresasComponent } from './features/feature-1/ui/Admin/ver-empresas
 import { CrearEmpresaComponent } from './features/feature-1/ui/Admin/crear-empresa/crear-empresa.component';
 import { CrearProductoComponent } from './features/feature-1/ui/Admin/crear-producto/crear-producto.component';
 import { AgregarColaboradorComponent } from './features/feature-1/ui/Admin/agregar-colaborador/agregar-colaborador.component';
+import { ListarColaboradoresComponent } from './features/feature-1/ui/Admin/listar-colaboradores/listar-colaboradores.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { VerEmpresaDetalleComponent } from './features/feature-1/ui/Admin/ver-empresa-detalle/ver-empresa-detalle.component';
+import { ListarProductosComponent } from './features/feature-1/ui/Admin/listar-productos/listar-productos.component';
+import { ListarServiciosComponent } from './features/feature-1/ui/Admin/listar-servicios/listar-servicios.component';
+
 
 export const routes: Routes = [
   {
@@ -37,12 +41,19 @@ export const routes: Routes = [
       { path: 'seleccionarEmpresaProducto', component: VerEmpresasComponent },
       { path: 'seleccionarEmpresaServicio', component: VerEmpresasComponent },
       { path: 'seleccionarEmpresaColaborador', component: VerEmpresasComponent },
+      { path: 'listarColaboradorEmpresa', component: VerEmpresasComponent },
+      { path: 'listarProductoEmpresa', component: VerEmpresasComponent },
+      { path: 'listarServicioEmpresa', component: VerEmpresasComponent },
       { path: 'crearProducto/:id_empresa', component: CrearProductoComponent },
       { path: 'crearServicio/:id_empresa', component: CrearProductoComponent },
       { path: 'AgregarColaborador/:id_empresa', component: AgregarColaboradorComponent },
       { path: 'verDetalleEmpresa/:id_empresa', component: VerEmpresaDetalleComponent },
+      { path: 'verTodasColaboradores/:id_empresa', component: ListarColaboradoresComponent },
+      { path: 'verTodosProductos/:id_empresa', component: ListarProductosComponent },
+      { path: 'verTodosServicios/:id_empresa', component: ListarServiciosComponent },
     ],
   }
+  
 
 ];
 

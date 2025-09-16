@@ -39,6 +39,21 @@
                 *ngIf="modoAgregarColaborador">
           Agregar Colaborador
         </button>
+        <button class="btn btn-secondary"
+                (click)=" openListarColaboradores(empresa)"
+                *ngIf="modoVerColaboradores">
+          Ver Colaboradores
+        </button>
+        <button class="btn btn-secondary"
+                (click)=" openListarProductos(empresa)"
+                *ngIf="modoListaProductosEmpresa">
+          Inventario de Productos
+        </button>
+        <button class="btn btn-secondary"
+                (click)=" openListarServicios(empresa)"
+                *ngIf="modoListaServiciosEmpresa">
+          Catálogo de Servicios
+        </button>
       </div>
     </div>
   </div>

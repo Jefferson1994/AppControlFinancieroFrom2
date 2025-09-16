@@ -1,0 +1,47 @@
+<div class="container">
+    <header class="header">
+        <h1>Gestión de Colaboradores</h1>
+        <button class="btn-primary">Añadir Colaborador</button>
+    </header>
+
+    <div class="toolbar">
+        <input type="text" class="search-input" placeholder="Buscar colaborador por nombre o rol...">
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Rol</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (colaborador of colaboradores; track colaborador.email) {
+                  <tr>
+                      <td>{{ colaborador.nombre }}</td>
+                      <td>{{ colaborador.rol }}</td>
+                      <td>{{ colaborador.email }}</td>
+                      <td>
+                          <span class="status-badge {{ colaborador.statusClass }}">
+                              {{ colaborador.status }}
+                          </span>
+                      </td>
+                      <td class="action-buttons">
+                           <div class="action-buttons">
+                                <a href="#">Ver</a>
+                                <a href="#">Desvincular</a>
+                                <a href="#">Activar</a>
+                                <a href="#">Estadisticas</a>
+                            </div>
+                          
+                      </td>
+                  </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

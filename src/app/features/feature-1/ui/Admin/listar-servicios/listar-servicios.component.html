@@ -1,0 +1,37 @@
+<div class="container">
+    <header class="header">
+        <h1>Catálogo de Servicios</h1>
+        <button class="btn-primary">Crear Servicio</button>
+    </header>
+
+    <div class="toolbar">
+        <input type="text" class="search-input" placeholder="Buscar servicio...">
+        <select class="filter-select">
+            <option value="">Todas las categorías</option>
+            <option value="cortes">Cortes de Cabello</option>
+            <option value="tratamientos">Tratamientos</option>
+        </select>
+    </div>
+
+    <div class="service-grid">
+        
+        @for (servicio of servicios; track servicio.nombre) {
+            <div class="service-card">
+                <img [src]="servicio.imageUrl" [alt]="servicio.nombre" class="service-card-image">
+                <div class="service-card-content">
+                    <div class="service-card-header">
+                        <h3 class="service-card-title">{{ servicio.nombre }}</h3>
+                        <span class="service-card-price">{{ servicio.precio | currency }}</span>
+                    </div>
+                    <p class="service-card-details">{{ servicio.categoria }} • {{ servicio.duracion }}</p>
+                    <p class="service-card-description">{{ servicio.descripcion }}</p>
+                    <div class="service-card-footer">
+                        <span class="status-badge" [class]="servicio.statusClass">{{ servicio.status }}</span>
+                        <button class="action-button" title="Acciones">...</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
