@@ -9,11 +9,12 @@ import { CrearServicioComponent } from "../crear-servicio/crear-servicio.compone
 import { AgregarColaboradorComponent } from "../agregar-colaborador/agregar-colaborador.component";
 import { LoadingService } from '../../../services/loading.service';
 import { AlertService } from '../../../services/alert.service';
+import { SafeUrlPipe } from "../../../../../pipes/safe-url.pipe";
 
 @Component({
   selector: 'app-ver-empresas',
   standalone: true,
-  imports: [CommonModule, CrearProductoComponent, CrearServicioComponent, AgregarColaboradorComponent], // Add CommonModule here
+  imports: [CommonModule, CrearProductoComponent, CrearServicioComponent, AgregarColaboradorComponent, SafeUrlPipe], // Add CommonModule here
   templateUrl: './ver-empresas.component.html',
   styleUrl: './ver-empresas.component.css'
 })
@@ -45,7 +46,7 @@ export class VerEmpresasComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
   try {
-    this.loadingService.show();
+
 
     await this.cargarEmpresas(); // espera a que termine
 
@@ -59,8 +60,8 @@ export class VerEmpresasComponent implements OnInit {
         this.modoListaServiciosEmpresa= url[0]?.path === 'listarServicioEmpresa';
 
 
-        if (this.modoSeleccionServices || this.modoSeleccionProducto 
-          || this.modoAgregarColaborador|| this.modoVerColaboradores|| 
+        if (this.modoSeleccionServices || this.modoSeleccionProducto
+          || this.modoAgregarColaborador|| this.modoVerColaboradores||
           this.modoListaProductosEmpresa || this.modoListaServiciosEmpresa) {
           this.crearEmpresa = false;
         }
@@ -83,29 +84,35 @@ export class VerEmpresasComponent implements OnInit {
 
   // En tu componente .ts
 
-  async cargarEmpresas(): Promise<void> {
-    try {
-      console.log('cargando empresas');
-      this.loading = true;
+  // en ver-empresas.component.ts
 
-      // ✅ CORRECCIÓN: Llama al nuevo método público del servicio
-      const userResponse = this.authService.getCurrentUser();
+async cargarEmpresas(): Promise<void> {
+  try {
+    this.loading = true;      // <-- Inicia la carga del componente
+    this.loadingService.show(); // <-- Inicia la carga global
 
-      // ❗ The logic to check if the user and ID exist remains the same
-      if (userResponse && userResponse.user && userResponse.user.id) {
-        const idAdministrador = userResponse.user.id;
-        this.empresas = await this.obtenerEmpresasUseCase.execute(idAdministrador,userResponse.token);
-      } else {
-        console.error('User not logged in or ID not found.');
-        // You should redirect the user to the login page here.
-      }
-    } catch (error) {
-      console.error('Error al cargar las empresas:', error);
-    } finally {
-      this.loading = false;
+    const userResponse = this.authService.getCurrentUser();
+    console.log('DEBUG userResponse:', JSON.stringify(userResponse));
+
+    if (userResponse && userResponse.user && userResponse.user.id) {
+      const idAdministrador = userResponse.user.id;
+      // Espera a que los datos lleguen antes de continuar
+      const empresasData = await this.obtenerEmpresasUseCase.execute(idAdministrador, userResponse.token);
+      this.empresas = empresasData;
+    } else {
+      console.error('User not logged in or ID not found.');
+      this.alertService.showError('No se pudo verificar la sesión del usuario.');
+      // Aquí deberías redirigir al login
+      // this.router.navigate(['/login']);
     }
+  } catch (error) {
+    console.error('Error al cargar las empresas:', error);
+    this.alertService.showError('No se pudieron cargar las empresas.');
+  } finally {
+    this.loading = false;     // <-- Detiene la carga del componente
+    this.loadingService.hide(); // <-- Detiene la carga global
   }
-
+}
   ACTUALIZAR(){}
 
   navegarACrearEmpresa(): void {
@@ -135,7 +142,7 @@ export class VerEmpresasComponent implements OnInit {
     // Usamos el Router para navegar a la ruta y pasar el ID como parámetro
     this.router.navigate(['/admin-dashboard/verTodasColaboradores', empresa.id]);
   }
- 
+
   openListarProductos(empresa: EmpresasInterfas): void {
     // Usamos el Router para navegar a la ruta y pasar el ID como parámetro
     this.router.navigate(['/admin-dashboard/verTodosProductos', empresa.id]);

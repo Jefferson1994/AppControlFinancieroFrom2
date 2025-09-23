@@ -32,6 +32,7 @@ export class CrearProductoComponent implements OnInit {
   producto = signal<any>({
     nombre: '',
     descripcion: '',
+    precio_compra: null,
     precio_venta: null,
     precio_promocion: null,
     precio_descuento: null,
@@ -58,6 +59,8 @@ export class CrearProductoComponent implements OnInit {
         precio_promocion: datosProducto.precio_promocion || null,
         precio_descuento: datosProducto.precio_descuento || null,
       };
+
+      console.log("el producto para guardar",productoParaCrear )
 
       try {
         const respuesta = await this.crearProductoUseCase.execute(productoParaCrear);

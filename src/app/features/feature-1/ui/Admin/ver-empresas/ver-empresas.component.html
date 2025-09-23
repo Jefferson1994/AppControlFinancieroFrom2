@@ -16,6 +16,7 @@
         </span>
       </div>
       <div class="card-body">
+        <img [src]="empresa.urlImagen | safeUrl" alt="Imagen de {{ empresa.nombre }}">
         <p><strong>RUC:</strong> {{ empresa.ruc }}</p>
         <p><strong>Código:</strong> {{ empresa.codigo_establecimiento }}</p>
         <p><strong>Tipo:</strong> {{ empresa.tipoEmpresa.nombre }}</p>

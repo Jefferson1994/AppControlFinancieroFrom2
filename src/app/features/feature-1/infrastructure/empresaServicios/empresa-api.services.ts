@@ -5,7 +5,8 @@ import { environment } from '../../../../environments/environment';
 import { CrearEmpresaDTO,CrearEmpresaResponse, EmpresasInterfas
   ,CrearProductoDTO,CrearProductoResponse,CrearServicioDTO,CrearServicioResponse
   ,AgregarColaboradorDTO,AgregarColaboradorResponse,
-  ActualizarrEmpresaDTO
+  ActualizarrEmpresaDTO, RespuestaProductos,
+  EstadisticasInventario
 } from '../../domain/models/empresa.models'; // Asegúrate de que los paths sean correctos
 import { empresaRepositorio } from '../../domain/repositories/empresaRepositories/empresa.repository'; // El contrato del repositorio
 
@@ -16,7 +17,7 @@ export class UserApiRepository implements empresaRepositorio {
   private readonly http = inject(HttpClient);
   //private readonly baseUrl = 'http://localhost:3000/';
   private baseUrl = environment.apiUrl;
-  
+
 
   async todasEmpresasXAdmin(idAdministrador: number, token: string): Promise<EmpresasInterfas[]> {
     const url = `${this.baseUrl}empresa/todasEmpresasXAdmin`;
@@ -151,6 +152,45 @@ export class UserApiRepository implements empresaRepositorio {
     } catch (error) {
       // El repositorio solo relanza el error. La lógica de manejo
       // específica va en el caso de uso o el componente.
+      throw error;
+    }
+  }
+
+  async ListaProductosXEmpresa(idEmpresa: number): Promise<RespuestaProductos> {
+    const url = `${this.baseUrl}productos/productoXEmpresa`;
+    const body = { id_empresa: idEmpresa };
+
+    try {
+      // ✅ CAMBIO 1: El tipo de la respuesta es directamente RespuestaProductos
+      const response = await lastValueFrom(
+        this.http.post<RespuestaProductos>(url, body)
+      );
+
+      // ✅ CAMBIO 2: Devuelve el objeto de respuesta COMPLETO
+      return response;
+
+    } catch (error) {
+      // Es una buena práctica manejar el error aquí también
+      console.error('Error en la llamada API ListaProductosXEmpresa:', error);
+      throw error;
+    }
+  }
+
+  async ListaEstadisticasXEmpresa(idEmpresa: number): Promise<EstadisticasInventario> {
+    const url = `${this.baseUrl}empresa/empresaEstadisticas`;
+    const body = { idEmpresa: idEmpresa };
+
+    try {
+
+      const response = await lastValueFrom(
+        this.http.post<EstadisticasInventario>(url, body)
+      );
+
+
+      return response;
+
+    } catch (error) {
+      console.error('Error en la llamada API ListaProductosXEmpresa:', error);
       throw error;
     }
   }

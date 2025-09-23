@@ -113,11 +113,11 @@ export class VerEmpresaDetalleComponent implements OnInit {
         datos_contacto: {
           telefono_contacto: this.empresa.datosContactoEmpresa.telefono_contacto,
           email_contacto: this.empresa.datosContactoEmpresa.email_contacto,
-          ciudad: "Quito",        
-          provincia: "Pichincha", 
-          pais: "Ecuador",        
-          latitud: -0.1807,       
-          longitud: -78.4678      
+          ciudad: "Quito",
+          provincia: "Pichincha",
+          pais: "Ecuador",
+          latitud: -0.1807,
+          longitud: -78.4678
         }
       };
 
@@ -129,7 +129,7 @@ export class VerEmpresaDetalleComponent implements OnInit {
       console.log('Respuesta de actualización:', respuesta);
 
       // ✅ Feedback al usuario
-    
+
       this.alertService.showSuccess('Empresa actualizada con éxito ');
 
       this.modoEdicion.set(false); // salir del modo edición

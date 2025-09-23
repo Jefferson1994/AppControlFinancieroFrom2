@@ -6,6 +6,6 @@ export interface UserRepositorio {
   LoginUser(Login: UserCredentials): Promise<UserResponse>;
   BuscarUser(userBuscar: UserCredentialsBuscar): Promise<BuscarColaboradorResponse>;
   CrearUsuario(crearUsario: CrearUsuarioDTO): Promise<CrearUsuarioResponse>;
-  RolesActivos(): Promise<RolUsuario[]>; 
+  RolesActivos(): Promise<RolUsuario[]>;
 }
 

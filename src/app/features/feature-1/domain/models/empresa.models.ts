@@ -14,6 +14,7 @@ export interface EmpresasInterfas {
   creado_en: string;
   datosContactoEmpresa: DatosContactoEmpresa;
   tipoEmpresa: TipoEmpresa;
+  urlImagen:string;
 }
 
 export interface DatosContactoEmpresa {
@@ -82,6 +83,7 @@ export interface CrearEmpresaResponse {
     horario_cierre: string;
     id_administrador: number;
     id_datos_contacto: number;
+    urlImagen:string;
     datosContactoEmpresa: {
       telefono_contacto: string;
       email_contacto: string;
@@ -102,6 +104,7 @@ export interface CrearEmpresaResponse {
 export interface CrearProductoDTO {
   nombre: string;
   descripcion: string;
+  precio_comprar: number;
   precio_venta: number;
   precio_promocion: number | null;
   precio_descuento: number | null;
@@ -172,4 +175,41 @@ export interface AgregarColaboradorResponse {
     id: number;
     porcentaje_ganancia: number;
   };
+}
+
+export interface TipoProducto {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  activo: number;
+}
+
+// Interfaz para el objeto principal 'Producto'
+export interface Producto {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio_compra: number;
+  precio_venta: number;
+  precio_promocion: number;
+  precio_descuento: number;
+  stock_actual: number;
+  id_negocio: number;
+  id_tipo_producto: number;
+  activo: number;
+  tipoProducto: TipoProducto; // <-- Aquí se anida la interfaz anterior
+}
+
+// Interfaz para la respuesta completa de la API
+export interface RespuestaProductos {
+  mensaje: string;
+  productos: Producto[]; // Un arreglo de la interfaz Producto
+}
+
+
+export interface EstadisticasInventario {
+  valorTotalInventario: number;
+  totalProductos: number;
+  productosConPocoStock: number;
+  gananciaPotencial: number;
 }

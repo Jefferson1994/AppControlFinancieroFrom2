@@ -1,31 +1,44 @@
 .empresas-container {
-  padding: 30px; /* Reducido de 40px */
+  padding: 30px;
 }
 
 .cards-grid {
   display: grid;
-  /* Reducimos el tamaño mínimo de la tarjeta a 300px */
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px; /* Reducido de 30px */
+  gap: 20px;
 }
 
 .card {
   background-color: #ffffff;
-  border-radius: 10px; /* Reducido de 12px */
+  border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+  overflow: hidden; /* Importante para la imagen */
   display: flex;
   flex-direction: column;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .card:hover {
-  transform: translateY(-4px); /* Reducido de -5px */
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* Sombra más sutil */
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* --- ESTILOS PARA LA IMAGEN (NUEVO) --- */
+.card-image-container {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Mantiene una proporción consistente */
+  background-color: #f0f0f0; /* Color de fondo mientras carga */
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* La imagen cubre el espacio sin deformarse */
+  display: block;
 }
 
 .card-header {
-  padding: 15px; /* Reducido de 20px */
+  padding: 15px;
   border-bottom: 1px solid #e0e0e0;
   display: flex;
   justify-content: space-between;
@@ -34,49 +47,53 @@
 
 .card-title {
   margin: 0;
-  font-size: 1.25rem; /* Reducido de 1.5rem */
+  font-size: 1.25rem;
 }
 
+/* --- ESTILO DEL ESTADO (AJUSTADO) --- */
 .card-status {
-  padding: 5px 10px; /* Reducido de 6px 12px */
-  border-radius: 5px;
-  font-size: 0.8rem; /* Reducido de 0.9rem */
-  font-weight: bold;
-  color: white;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .card-status.active {
-  background-color: #28a745;
+  background-color: #e0f8e9; /* Fondo pastel verde */
+  color: #1d7c3f; /* Texto oscuro */
 }
 
 .card-status.inactive {
-  background-color: #dc3545;
+  background-color: #f8e0e0; /* Fondo pastel rojo */
+  color: #c0392b; /* Texto oscuro */
 }
 
 .card-body {
-  padding: 15px; /* Reducido de 20px */
+  padding: 15px;
   flex-grow: 1;
 }
 
 .card-body p {
-  margin: 0 0 8px 0; /* Reducido de 10px */
-  line-height: 1.5; /* Reducido de 1.6 */
-  font-size: 0.9rem; /* Reducido de 1rem */
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+  font-size: 0.9rem;
   color: #555;
 }
 
 .card-footer {
-  padding: 15px; /* Reducido de 20px */
+  padding: 15px;
   border-top: 1px solid #e0e0e0;
   display: flex;
-  gap: 8px; /* Reducido de 10px */
+  flex-wrap: wrap; /* Mejora para responsividad */
+  gap: 8px;
   justify-content: flex-end;
 }
 
+/* --- TUS ESTILOS ORIGINALES (SIN CAMBIOS) --- */
 .btn {
-  padding: 10px 20px; /* Reducido de 12px 24px */
+  padding: 10px 20px;
   border: none;
-  border-radius: 6px; /* Reducido de 8px */
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: bold;
@@ -102,12 +119,12 @@
 }
 
 .create-company-btn-container {
-  margin-top: 30px; /* Reducido de 40px */
+  margin-top: 30px;
   text-align: center;
 }
 
 .create-btn {
-  padding: 12px 24px; /* Reducido de 14px 28px */
+  padding: 12px 24px;
   background-color: #f39c12;
   color: white;
   border: none;

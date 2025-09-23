@@ -1,17 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from 'express';
+import{listarProductoxEmpresaUseCase} from '../../../domain/use-cases/empresa-caseEmpresa/listarProductosXempresa.use.case'
+import{listarEstadisticasxEmpresaUseCase} from '../../../domain/use-cases/empresa-caseEmpresa/listarEstadisticasXempresa.use.case'
+import { EstadisticasInventario, Producto, RespuestaProductos } from '../../../domain/models/empresa.models';
 
-export interface Producto {
-  nombre: string;
-  sku: string;
-  imageUrl: string;
-  categoria: string;
-  precioVenta: number;
-  costo: number;
-  stock: number;
-  status: string;
-  statusClass: string;
-}
 
 @Component({
   selector: 'app-listar-productos',
@@ -22,42 +16,65 @@ export interface Producto {
 })
 
 
-export class ListarProductosComponent {
+export class ListarProductosComponent implements OnInit {
 
-  productos: Producto[] = [
-    {
-      nombre: 'Cera Moldeadora Fuerte',
-      sku: 'SKU: 1001',
-      imageUrl: 'https://http2.mlstatic.com/D_NQ_NP_677822-MLU78456287432_082024-O.webp',
-      categoria: 'Gel',
-      precioVenta: 15.00,
-      costo: 8.50,
-      stock: 32,
-      status: 'En Stock',
-      statusClass: 'status-instock'
-    },
-    {
-      nombre: 'Shampoo Anti-caída',
-      sku: 'SKU: 1002',
-      imageUrl: 'https://http2.mlstatic.com/D_NQ_NP_677822-MLU78456287432_082024-O.webp',
-      categoria: 'Shampoo',
-      precioVenta: 12.50,
-      costo: 6.00,
-      stock: 4,
-      status: 'Poco Stock',
-      statusClass: 'status-lowstock'
-    },
-    {
-      nombre: 'Aceite para Barba',
-      sku: 'SKU: 1003',
-      imageUrl: 'https://http2.mlstatic.com/D_NQ_NP_677822-MLU78456287432_082024-O.webp',
-      categoria: 'Aceites',
-      precioVenta: 18.00,
-      costo: 9.50,
-      stock: 0,
-      status: 'Agotado',
-      statusClass: 'status-outofstock'
+  selectedEmpresaId: number | null = null;
+  selectedEmpresaNombre: string | null = null;
+  showProductModal = false;
+  private route = inject(ActivatedRoute);
+  productosLista: RespuestaProductos[]| null = null;
+  //public productos: RespuestaProductos[] = [];
+  productos: Producto[] = [];
+  estadisticas: EstadisticasInventario[] = [];
+  valorTotalInventario: number | null = null;
+  totalProductos: number | null = null;
+  productosPocostok: number | null = null;
+  ganaciaPotencial: number | null = null;
+
+  constructor(private ListarProductoxEmpresaUseCase :listarProductoxEmpresaUseCase, private ListarEstadisticasxEmpresaUseCase : listarEstadisticasxEmpresaUseCase){
+
+  }
+
+async ngOnInit(): Promise<void> {
+    const idEmpresaStr = this.route.snapshot.paramMap.get('id_empresa');
+    if (idEmpresaStr) {
+      this.selectedEmpresaId = Number(idEmpresaStr);
+      await this.cargarProductos(this.selectedEmpresaId);
+      await this.cargarEstadisticas(this.selectedEmpresaId);
     }
-  ];
+  }
+
+  async cargarProductos(idEmpresa: number): Promise<void> {
+    try {
+      const respuesta = await this.ListarProductoxEmpresaUseCase.execute(idEmpresa);
+      this.productos = respuesta.productos; // respuesta ya es Producto[]
+
+      console.log('productos en el ts ',this.productos)
+    } catch (error) {
+      console.error("Error al cargar los productosss:", error);
+      this.productos = [];
+    }
+  }
+
+
+  async cargarEstadisticas(idEmpresa: number): Promise<void> {
+    try {
+      const respuesta = await this.ListarEstadisticasxEmpresaUseCase.execute(idEmpresa);
+      this.valorTotalInventario = respuesta.valorTotalInventario;
+      this.totalProductos= respuesta.totalProductos;
+      this.productosPocostok= respuesta.productosConPocoStock;
+      this.ganaciaPotencial=respuesta.gananciaPotencial;
+      console.log("el total del inventrio ",this.valorTotalInventario )
+
+      console.log('productos en el ts ',this.productos)
+    } catch (error) {
+      console.error("Error al cargar los productosss:", error);
+      this.productos = [];
+    }
+  }
+
+
+
+
 
 }

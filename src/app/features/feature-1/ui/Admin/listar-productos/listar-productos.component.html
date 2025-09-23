@@ -1,21 +1,21 @@
 <div class="container">
-    
+
     <div class="kpi-cards">
         <div class="card">
             <p class="card-title">Valor Total del Inventario (Costo)</p>
-            <p class="card-value">$1,850.50</p>
+            <p class="card-value">{{ valorTotalInventario }}</p>
         </div>
         <div class="card">
             <p class="card-title">Productos Totales (SKUs)</p>
-            <p class="card-value">35</p>
+            <p class="card-value">{{ totalProductos }}</p>
         </div>
         <div class="card">
             <p class="card-title">Productos con Poco Stock</p>
-            <p class="card-value">3</p>
+            <p class="card-value">{{ productosPocostok }}</p>
         </div>
         <div class="card">
             <p class="card-title">Ganancia Potencial</p>
-            <p class="card-value">$980.00</p>
+            <p class="card-value">{{ ganaciaPotencial }}</p>
         </div>
     </div>
 
@@ -35,42 +35,30 @@
         <div class="table-container">
             <table>
                 <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Categoría</th>
-                        <th>Precio Venta</th>
-                        <th>Costo</th>
-                        <th>Stock</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio de comprar</th>
+                    <th>Precio de venta</th>
+                    <th>Precio de descuento</th>
+                    <th>Precio de mayorista</th>
+                    <th>Stock</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    @for (producto of productos; track producto.sku) {
-                      <tr>
-                          <td>
-                              <div class="product-cell">
-                                  <img [src]="producto.imageUrl" [alt]="producto.nombre" class="product-image">
-                                  <div>
-                                      <div class="product-name">{{ producto.nombre }}</div>
-                                      <div class="product-sku">{{ producto.sku }}</div>
-                                  </div>
-                              </div>
-                          </td>
-                          <td>{{ producto.categoria }}</td>
-                          <td>{{ producto.precioVenta | currency }}</td>
-                          <td>{{ producto.costo | currency }}</td>
-                          <td>{{ producto.stock }}</td>
-                          <td>
-                              <span class="status-badge" [class]="producto.statusClass">
-                                  {{ producto.status }}
-                              </span>
-                          </td>
-                          <td><button class="action-button" title="Acciones">...</button></td>
-                      </tr>
-                    }
+                  <tr *ngFor="let producto of productos">
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.tipoProducto.nombre }}</td>
+                    <td>{{ producto.precio_compra }}</td>
+                    <td>{{ producto.precio_venta }}</td>
+                    <td>{{ producto.precio_promocion }}</td>
+                    <td>{{ producto.precio_descuento }}</td>
+                    <td>{{ producto.stock_actual }}</td>
+                  </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+
 </div>

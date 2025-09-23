@@ -13,13 +13,14 @@ import { UserRepositorio } from '../../domain/repositories/userRepositories/user
 })
 export class UserApiRepository implements UserRepositorio {
   private readonly http = inject(HttpClient);
-  
+
   //private readonly baseUrl = 'http://localhost:3000/api';
   private baseUrl = environment.apiUrl;
 
 
   async LoginUser(credentials: UserCredentials): Promise<UserResponse> {
     const url = `${this.baseUrl}api/login`;
+    console.log('url armada',url)
 
     try {
       // Usamos lastValueFrom para convertir el Observable en una promesa
@@ -71,7 +72,7 @@ export class UserApiRepository implements UserRepositorio {
     const url = `${this.baseUrl}api//rol`;
     console.log('la url es en roles', url)
     try {
-        
+
         return await lastValueFrom(this.http.post<RolUsuario[]>(url, {}));
     } catch (error) {
         // El manejo del error está bien como lo tienes
