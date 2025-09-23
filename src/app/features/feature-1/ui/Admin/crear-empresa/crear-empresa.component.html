@@ -65,25 +65,9 @@
           <label for="email">Email</label>
           <input type="email" id="email" name="email_contacto" ngModel required>
         </div>
-        <div class="form-group">
-          <label for="ciudad">Ciudad</label>
-          <input type="text" id="ciudad" name="ciudad" ngModel required>
-        </div>
-        <div class="form-group">
-          <label for="provincia">Provincia</label>
-          <input type="text" id="provincia" name="provincia" ngModel required>
-        </div>
-        <div class="form-group">
-          <label for="pais">País</label>
-          <input type="text" id="pais" name="pais" ngModel required>
-        </div>
         <div class="form-group full-width">
-          <label for="latitud">Latitud</label>
-          <input type="number" id="latitud" name="latitud" ngModel>
-        </div>
-        <div class="form-group full-width">
-          <label for="longitud">Longitud</label>
-          <input type="number" id="longitud" name="longitud" ngModel>
+          <h3>Seleccione su ubicación</h3>
+          <app-component-mapa-registro (locationSelected)="onLocationSelected($event)"></app-component-mapa-registro>
         </div>
       </div>
       <div class="button-group">

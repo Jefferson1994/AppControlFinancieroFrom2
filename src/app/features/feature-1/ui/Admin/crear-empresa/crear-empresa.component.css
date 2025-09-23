@@ -180,3 +180,14 @@ h2 {
   font-size: 0.9em;
   transition: border-color 0.3s;
 }
+
+.form-grid .full-width {
+  grid-column: 1 / -1; /* Esto hace que el elemento ocupe todas las columnas */
+}
+
+.map-view {
+  /* Proporción de 16 de ancho por 9 de alto */
+  aspect-ratio: 16 / 9;
+  width: 90%;
+  height: auto; /* La altura se calcula sola */
+}

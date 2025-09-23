@@ -5,16 +5,31 @@ import { CrearEmpresaDTO, CrearEmpresaResponse } from '../../../domain/models/em
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { crearEmpresasUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/crearEmpresa.use.case';
+import { ComponentMapaRegistroComponent } from "../component-mapa-registro/component-mapa-registro.component";
 
 @Component({
   selector: 'app-crear-empresa',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ComponentMapaRegistroComponent],
   templateUrl: './crear-empresa.component.html',
   styleUrls: ['./crear-empresa.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CrearEmpresaComponent {
+
+  selectedLocation: {
+    lat: number;
+    lng: number;
+    canton: string;
+    province: string;
+    address: string;
+  } = {
+    lat: 0,
+    lng: 0,
+    canton: 'N/A',
+    province: 'N/A',
+    address: 'N/A'
+  };
 
   constructor(
     private crearEmpresasUseCase: crearEmpresasUseCase,
@@ -73,5 +88,10 @@ export class CrearEmpresaComponent {
     } else {
       console.error('No se pudo enviar el formulario: usuario no autenticado.');
     }
+  }
+
+   onLocationSelected(locationData: { lat: number; lng: number; canton: string; province: string; address: string }) {
+    this.selectedLocation = locationData;
+    console.log('Selected Location:', this.selectedLocation);
   }
 }
