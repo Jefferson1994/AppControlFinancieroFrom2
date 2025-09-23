@@ -5,6 +5,8 @@ import { Router } from 'express';
 import{listarProductoxEmpresaUseCase} from '../../../domain/use-cases/empresa-caseEmpresa/listarProductosXempresa.use.case'
 import{listarEstadisticasxEmpresaUseCase} from '../../../domain/use-cases/empresa-caseEmpresa/listarEstadisticasXempresa.use.case'
 import { EstadisticasInventario, Producto, RespuestaProductos } from '../../../domain/models/empresa.models';
+import { AlertService } from '../../../services/alert.service';
+import { LoadingService } from '../../../services/loading.service';
 
 
 @Component({
@@ -30,6 +32,10 @@ export class ListarProductosComponent implements OnInit {
   totalProductos: number | null = null;
   productosPocostok: number | null = null;
   ganaciaPotencial: number | null = null;
+  private alertService = inject(AlertService);
+  private loadingService = inject(LoadingService);
+  
+  loading = true;
 
   constructor(private ListarProductoxEmpresaUseCase :listarProductoxEmpresaUseCase, private ListarEstadisticasxEmpresaUseCase : listarEstadisticasxEmpresaUseCase){
 
@@ -38,9 +44,23 @@ export class ListarProductosComponent implements OnInit {
 async ngOnInit(): Promise<void> {
     const idEmpresaStr = this.route.snapshot.paramMap.get('id_empresa');
     if (idEmpresaStr) {
-      this.selectedEmpresaId = Number(idEmpresaStr);
-      await this.cargarProductos(this.selectedEmpresaId);
-      await this.cargarEstadisticas(this.selectedEmpresaId);
+      
+      try{
+        this.selectedEmpresaId = Number(idEmpresaStr);
+        this.loading = true;      // <-- Inicia la carga del componente
+        this.loadingService.show(); 
+        await this.cargarProductos(this.selectedEmpresaId);
+        await this.cargarEstadisticas(this.selectedEmpresaId);
+
+      }catch (error){
+        console.error('Error al cargar las empresas:', error);
+        this.alertService.showError('Sucedio un error al cargar el inventario.');
+
+      }finally{
+        this.loading = false;     // <-- Detiene la carga del componente
+        this.loadingService.hide();
+      }
+
     }
   }
 

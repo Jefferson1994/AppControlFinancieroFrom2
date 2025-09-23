@@ -1,9 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CrearProductoDTO } from '../../../domain/models/empresa.models';
 import { crearProductoUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/crearProdcuto.use.case';
 import { AuthService } from '../../../services/auth.service';
+import { AlertService } from '../../../services/alert.service';
+import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'app-crear-producto',
@@ -26,7 +28,9 @@ export class CrearProductoComponent implements OnInit {
 
   // ✅ Output property to emit an event when closing the modal
   @Output() modalClosed = new EventEmitter<void>();
-
+  private alertService = inject(AlertService);
+  private loadingService = inject(LoadingService);
+  loading = true;
 
 
   producto = signal<any>({
@@ -63,11 +67,18 @@ export class CrearProductoComponent implements OnInit {
       console.log("el producto para guardar",productoParaCrear )
 
       try {
+         this.loading = true;      // <-- Inicia la carga del componente
+        this.loadingService.show();
         const respuesta = await this.crearProductoUseCase.execute(productoParaCrear);
         console.log('Respuesta de la API:', respuesta);
+        this.alertService.showSuccess('Se creo exitosamente el producto');
         this.closeModal();
       } catch (error) {
         console.error('Error al crear el producto:', error);
+        this.alertService.showError('Error al crear el producto:');
+      }finally {
+        this.loading = false;     // <-- Detiene la carga del componente
+        this.loadingService.hide(); // <-- Detiene la carga global
       }
     } else {
       console.log('Formulario no válido. Por favor, revisa los campos.');

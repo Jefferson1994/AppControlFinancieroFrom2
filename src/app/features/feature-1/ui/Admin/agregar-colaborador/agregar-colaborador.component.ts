@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,7 +6,8 @@ import { buscarUserUseCase } from '../../../../feature-1/domain/use-cases/use-ca
 import { agregarColaboradorServicesUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/agregarColaborador.Servicio.use.case';
 import { AuthService } from '../../../services/auth.service';
 import { AgregarColaboradorDTO } from '../../../domain/models/empresa.models';
-
+import { LoadingService } from '../../../services/loading.service';
+import { AlertService } from '../../../services/alert.service';
 @Component({
   selector: 'app-agregar-colaborador',
   standalone: true,
@@ -19,6 +20,9 @@ export class AgregarColaboradorComponent implements OnInit {
   @Input() idEmpresa: number | undefined;
   @Input() nombreEmpresa: string | undefined;
   @Output() modalClosed = new EventEmitter<void>();
+  private loadingService = inject(LoadingService);
+  private alertService = inject(AlertService);
+  loading = false;
 
   constructor(
       private buscarUserUseCase: buscarUserUseCase,
@@ -53,17 +57,17 @@ export class AgregarColaboradorComponent implements OnInit {
     // ✅ Usa una variable local para obtener el valor de la señal
     const cedula = this.cedulaData().cedula;
 
-    // ✅ Agrega una validación para asegurarte de que la cédula exista y tenga el largo correcto
+    
     if (!cedula || cedula.length !== 10) {
-      this.colaboradorData.set(null); // Limpia los datos si la cédula es inválida
-      this.camposBloqueados.set(false); // Desbloquea los campos para que se puedan editar
-      return; // Detiene la ejecución del método
+      this.colaboradorData.set(null); 
+      this.camposBloqueados.set(false); 
+      return; 
     }
 
-    // ✅ Ya no necesitas esta línea, ya que la validación anterior lo maneja
-    // this.camposBloqueados.set(false);
 
     try {
+      this.loading = true;      // <-- Inicia la carga del componente
+      this.loadingService.show(); // <-- Inicia la carga global
       console.log('Buscando colaborador con cédula:', cedula);
       const userCredentials = { cedula: cedula };
       const respuesta = await this.buscarUserUseCase.execute(userCredentials);
@@ -73,17 +77,25 @@ export class AgregarColaboradorComponent implements OnInit {
         this.colaboradorData.set(respuesta);
         this.camposBloqueados.set(true); // Bloquea los campos si se encuentra al colaborador
         this.desbloquepunto.set(false);
+        this.loading = false;     // <-- Detiene la carga del componente
+        this.loadingService.hide();
       } else {
         console.log('No se encontró un colaborador con esa cédula.');
         this.colaboradorData.set(null);
         this.camposBloqueados.set(false); // Desbloquea los campos para que se puedan editar
         this.desbloquepunto.set(true);
+        this.loading = false;     // <-- Detiene la carga del componente
+        this.loadingService.hide();
       }
     } catch (error) {
       console.error('Error al buscar colaborador:', error);
       this.colaboradorData.set(null);
       this.camposBloqueados.set(false); // Desbloquea los campos en caso de error
       this.desbloquepunto.set(true);
+
+    }finally {
+      this.loading = false;  
+      this.loadingService.hide(); 
     }
   }
 

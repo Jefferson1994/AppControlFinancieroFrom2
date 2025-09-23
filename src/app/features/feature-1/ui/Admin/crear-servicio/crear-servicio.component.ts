@@ -1,9 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { crearServicesUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/crear.Servicio.use.case';
 import { AuthService } from '../../../services/auth.service';
+import { AlertService } from '../../../services/alert.service';
+import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'app-crear-servicio',
@@ -25,6 +27,10 @@ export class CrearServicioComponent implements OnInit {
   @Input() nombreEmpresa: string | undefined;
 
   @Output() modalClosed = new EventEmitter<void>();
+  private alertService = inject(AlertService);
+  private loadingService = inject(LoadingService);
+  
+  loading = true;
 
   servicio = signal<any>({
     nombre: '',
@@ -53,11 +59,18 @@ export class CrearServicioComponent implements OnInit {
       const datosServicio = this.servicio();
 
       try {
+        this.loading = true;      // <-- Inicia la carga del componente
+        this.loadingService.show(); // <-- Inicia la carga global
         const respuesta = await this.crearServicioUseCase.execute(datosServicio); // ✅ Llama al caso de uso
         console.log('Servicio creado:', respuesta);
+        this.alertService.showSuccess('Servicio creado con exito.');
         this.closeModal();
       } catch (error) {
         console.error('Error al crear el servicio:', error);
+        this.alertService.showError('No se pudo crear el servicio.');
+      }finally{
+        this.loading = false;     // <-- Detiene la carga del componente
+        this.loadingService.hide()
       }
     } else {
       console.log('Formulario no válido. Por favor, revisa los campos.');
