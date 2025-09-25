@@ -4,21 +4,20 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from 'express';
 import{listarProductoxEmpresaUseCase} from '../../../domain/use-cases/empresa-caseEmpresa/listarProductosXempresa.use.case'
 import{listarEstadisticasxEmpresaUseCase} from '../../../domain/use-cases/empresa-caseEmpresa/listarEstadisticasXempresa.use.case'
-import { EstadisticasInventario, Producto, RespuestaProductos } from '../../../domain/models/empresa.models';
-<<<<<<< HEAD
-import { AlertService } from '../../../services/alert.service';
-import { LoadingService } from '../../../services/loading.service';
-
-=======
+import { EmpresasInterfas, EstadisticasInventario, Producto, RespuestaProductos } from '../../../domain/models/empresa.models';
 import { SafeUrlPipe } from "../../../../../pipes/safe-url.pipe";
 import { AlertService } from '../../../services/alert.service';
 import { LoadingService } from '../../../services/loading.service';
->>>>>>> 54aa99e (cambios no recuerdo si vaje los del trabajo ajajaj)
+import { CrearProductoComponent } from "../crear-producto/crear-producto.component";
+import { AuthService } from '../../../services/auth.service'
+import { EmpresasXIdUseCase } from '../../../domain/use-cases/empresa-caseEmpresa/empreXId.use.case';
+
+
 
 @Component({
   selector: 'app-listar-productos',
   standalone: true,
-  imports: [CommonModule,SafeUrlPipe],
+  imports: [CommonModule,SafeUrlPipe,CrearProductoComponent],
   templateUrl: './listar-productos.component.html',
   styleUrl: './listar-productos.component.css'
 })
@@ -28,6 +27,12 @@ export class ListarProductosComponent implements OnInit {
 
   selectedEmpresaId: number | null = null;
   selectedEmpresaNombre: string | null = null;
+
+  empresas: EmpresasInterfas[] = [];
+  empresa: EmpresasInterfas | null = null;
+  empresa2: [EmpresasInterfas] | null = null;
+  //selectedEmpresaNombre: string | undefined = undefined;
+  //selectedEmpresaId: number | undefined = undefined;
   showProductModal = false;
   private route = inject(ActivatedRoute);
   productosLista: RespuestaProductos[]| null = null;
@@ -38,48 +43,27 @@ export class ListarProductosComponent implements OnInit {
   totalProductos: number | null = null;
   productosPocostok: number | null = null;
   ganaciaPotencial: number | null = null;
-<<<<<<< HEAD
-  private alertService = inject(AlertService);
-  private loadingService = inject(LoadingService);
-  
-  loading = true;
-=======
     private alertService = inject(AlertService);
     private loadingService = inject(LoadingService);
 
     loading = true;
->>>>>>> 54aa99e (cambios no recuerdo si vaje los del trabajo ajajaj)
 
-  constructor(private ListarProductoxEmpresaUseCase :listarProductoxEmpresaUseCase, private ListarEstadisticasxEmpresaUseCase : listarEstadisticasxEmpresaUseCase){
+  constructor(private ListarProductoxEmpresaUseCase :listarProductoxEmpresaUseCase,
+    private ListarEstadisticasxEmpresaUseCase : listarEstadisticasxEmpresaUseCase,
+    private authService: AuthService,private obtenerEmpresasUseCase:EmpresasXIdUseCase){
 
   }
 
 async ngOnInit(): Promise<void> {
     const idEmpresaStr = this.route.snapshot.paramMap.get('id_empresa');
     if (idEmpresaStr) {
-<<<<<<< HEAD
-      
-      try{
-        this.selectedEmpresaId = Number(idEmpresaStr);
-        this.loading = true;      // <-- Inicia la carga del componente
-        this.loadingService.show(); 
-        await this.cargarProductos(this.selectedEmpresaId);
-        await this.cargarEstadisticas(this.selectedEmpresaId);
-
-      }catch (error){
-        console.error('Error al cargar las empresas:', error);
-        this.alertService.showError('Sucedio un error al cargar el inventario.');
-
-      }finally{
-        this.loading = false;     // <-- Detiene la carga del componente
-        this.loadingService.hide();
-=======
       try{
         this.loading = true;      // <-- Inicia la carga del componente
         this.loadingService.show(); // <-- Inicia la carga global
         this.selectedEmpresaId = Number(idEmpresaStr);
         await this.cargarProductos(this.selectedEmpresaId);
         await this.cargarEstadisticas(this.selectedEmpresaId);
+        await this.cargarDatosEmpresa(this.selectedEmpresaId);
 
       }catch(error){
         console.error("Error al cargar los productosss:", error);
@@ -88,7 +72,6 @@ async ngOnInit(): Promise<void> {
       }finally{
         this.loading = false;
          this.loadingService.hide();
->>>>>>> 54aa99e (cambios no recuerdo si vaje los del trabajo ajajaj)
       }
 
     }
@@ -122,6 +105,79 @@ async ngOnInit(): Promise<void> {
       this.productos = [];
     }
   }
+
+  async cargarDatosEmpresa(idEmpresa : number): Promise<void> {
+    try {
+      this.loadingService.show();
+      console.log('cargando empresas');
+
+
+      // ✅ CORRECCIÓN: Llama al nuevo método público del servicio
+      const userResponse = this.authService.getCurrentUser();
+
+      // ❗ The logic to check if the user and ID exist remains the same
+      if (userResponse && userResponse.user && userResponse.user.id) {
+        const idAdministrador = userResponse.user.id;
+
+        const response = await this.obtenerEmpresasUseCase.execute(idEmpresa);
+        if (Array.isArray(response)) {
+          this.empresa = response[0]
+        } else {
+          this.empresa = response;
+        }
+        console.log('Empresa cargada y asignada:', JSON.stringify(this.empresa));
+
+
+      } else {
+        console.error('User not logged in or ID not found.');
+        // You should redirect the user to the login page here.
+      }
+    } catch (error) {
+      console.error('Error al cargar las empresas:', error);
+    } finally {
+      this.loadingService.hide();
+    }
+  }
+
+  openProductModal(empresa: EmpresasInterfas): void {
+        console.log('la empresa en crear ',empresa)
+    this.selectedEmpresaId = empresa.id;
+    this.selectedEmpresaNombre = empresa.nombre;
+    this.showProductModal = true;
+  }
+
+  async onModalClosed(): Promise<void> {
+    this.showProductModal = false;
+    this.selectedEmpresaId = null;
+    this.cargarComponente();
+  }
+
+  async cargarComponente(): Promise<void> {
+  const idEmpresaStr = this.route.snapshot.paramMap.get('id_empresa');
+  if (!idEmpresaStr) return;
+
+  try {
+    this.loading = true;
+    this.loadingService.show();
+    this.selectedEmpresaId = Number(idEmpresaStr);
+
+    await this.cargarProductos(this.selectedEmpresaId);
+    await this.cargarEstadisticas(this.selectedEmpresaId);
+
+  } catch (error) {
+    console.error("Error al cargar los productos:", error);
+    this.productos = [];
+    this.alertService.showError('Error al cargar los productos.');
+  } finally {
+    this.loading = false;
+    this.loadingService.hide();
+  }
+  }
+
+  
+
+
+
 
 
 

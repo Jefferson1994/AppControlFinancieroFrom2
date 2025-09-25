@@ -1,7 +1,7 @@
 <div class="container">
     <header class="header">
         <h1>Catálogo de Servicios</h1>
-        <button class="btn-primary">Crear Servicio</button>
+        <button class="btn-primary" (click)="empresa ? openServiciosModal(empresa) : null" >Crear Servicio</button>
     </header>
 
     <div class="toolbar">
@@ -53,4 +53,11 @@
       }
 
     </div>
+
+    <app-crear-servicio
+        *ngIf="showProductModalServicio && selectedEmpresaId && selectedEmpresaNombre"
+        [idEmpresa]="selectedEmpresaId"
+        [nombreEmpresa]="selectedEmpresaNombre"
+        (modalClosed)="onModalClosed()">
+    </app-crear-servicio>
 </div>

@@ -22,7 +22,7 @@
     <div class="content-box">
         <header class="header">
             <h1>Inventario de Productos</h1>
-            <button class="btn-primary">Añadir Producto</button>
+            <button class="btn-primary"  (click)="empresa ? openProductModal(empresa) : null">Añadir Producto</button>
         </header>
 
         <div class="toolbar">
@@ -59,6 +59,14 @@
             </table>
         </div>
     </div>
+
+    <app-crear-producto
+    *ngIf="showProductModal && selectedEmpresaId && selectedEmpresaNombre"
+    [idEmpresa]="selectedEmpresaId"
+    [nombreEmpresa]="selectedEmpresaNombre"
+    (modalClosed)="onModalClosed()">
+  </app-crear-producto>
+
 
 
 </div>
