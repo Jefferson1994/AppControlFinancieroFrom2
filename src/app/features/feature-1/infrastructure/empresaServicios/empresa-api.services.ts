@@ -6,7 +6,7 @@ import { CrearEmpresaDTO,CrearEmpresaResponse, EmpresasInterfas
   ,CrearProductoDTO,CrearProductoResponse,CrearServicioDTO,CrearServicioResponse
   ,AgregarColaboradorDTO,AgregarColaboradorResponse,
   ActualizarrEmpresaDTO, RespuestaProductos,
-  EstadisticasInventario
+  EstadisticasInventario,RespuestaServicios
 } from '../../domain/models/empresa.models'; // Asegúrate de que los paths sean correctos
 import { empresaRepositorio } from '../../domain/repositories/empresaRepositories/empresa.repository'; // El contrato del repositorio
 
@@ -191,6 +191,24 @@ export class UserApiRepository implements empresaRepositorio {
 
     } catch (error) {
       console.error('Error en la llamada API ListaProductosXEmpresa:', error);
+      throw error;
+    }
+  }
+
+  async ListaServicioXEmpresa(idEmpresa: number): Promise<RespuestaServicios> {
+    const url = `${this.baseUrl}servicio/servicioXEmpresa`;
+    const body = { id_empresa: idEmpresa };
+
+    try {
+      const response = await lastValueFrom(
+        this.http.post<RespuestaServicios>(url, body)
+      );
+
+      return response;
+
+    } catch (error) {
+
+      console.error('Error en la llamada API ListaServiciosXEmpresa:', error);
       throw error;
     }
   }

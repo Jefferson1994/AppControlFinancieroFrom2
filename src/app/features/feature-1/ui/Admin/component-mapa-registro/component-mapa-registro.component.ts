@@ -12,12 +12,15 @@ import { GoogleMap } from '@angular/google-maps';
 })
 export class ComponentMapaRegistroComponent implements OnInit {
 
-  @Output() locationSelected = new EventEmitter<{
+    @Output() locationSelected = new EventEmitter<{
     lat: number;
     lng: number;
     canton: string;
     province: string;
     address: string;
+    country: string;
+    direccionFisica: string;
+    addressURl: string;
   }>();
 
   center: google.maps.LatLngLiteral = { lat: -2.90055, lng: -79.00453 };
@@ -28,8 +31,11 @@ export class ComponentMapaRegistroComponent implements OnInit {
   cantonName: string = '';
   provinceName: string = '';
   address: string = '';
+  countryName: string = '';
+  mapUrl: string = '';
+  streetAddress: string = '';
 
-  private apiKey = 'AIzaSyAqPFpSHGA8FFV8wii7r4Ivo2M0igtfNoo'; 
+  private apiKey = 'AIzaSyAqPFpSHGA8FFV8wii7r4Ivo2M0igtfNoo';
   private geocodingUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
 
   constructor(private http: HttpClient) {}
@@ -69,7 +75,7 @@ export class ComponentMapaRegistroComponent implements OnInit {
     });
   }
 
-  getCantonAndProvinceName(lat: number, lng: number) {
+  /*getCantonAndProvinceName(lat: number, lng: number) {
     const url = `${this.geocodingUrl}?latlng=${lat},${lng}&key=${this.apiKey}`;
 
     this.http.get<any>(url).subscribe(response => {
@@ -120,7 +126,10 @@ export class ComponentMapaRegistroComponent implements OnInit {
           lng: this.markerPosition!.lng,
           canton: this.cantonName,
           province: this.provinceName,
-          address: this.address // La dirección ahora incluye el enlace
+          country: this.countryName,              // La variable que guarda el país
+          direccionFisica: this.streetAddress,    // La variable para la dirección legible
+          addressURl: this.mapUrl,
+          address: this.address,
         });
 
         console.log('Canton Name:', this.cantonName);
@@ -137,6 +146,53 @@ export class ComponentMapaRegistroComponent implements OnInit {
     }, error => {
       console.error('Error fetching canton, province and address:', error);
     });
+  }*/
+
+  getCantonAndProvinceName(lat: number, lng: number) {
+    const url = `${this.geocodingUrl}?latlng=${lat},${lng}&key=${this.apiKey}`;
+
+    this.http.get<any>(url).subscribe({
+      next: response => {
+        if (response.results && response.results.length > 0) {
+          const result = response.results[0];
+          const addressComponents = result.address_components;
+
+          // Extraemos todos los datos que necesitamos
+          this.streetAddress = result.formatted_address || 'Dirección no encontrada';
+          this.cantonName = this.findAddressComponent(addressComponents, 'administrative_area_level_2');
+          this.provinceName = this.findAddressComponent(addressComponents, 'administrative_area_level_1');
+          this.countryName = this.findAddressComponent(addressComponents, 'country');
+          this.mapUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+          this.address = this.streetAddress; // Mantenemos 'address' con la dirección física
+
+          console.log(`País: ${this.countryName}, Provincia: ${this.provinceName}, Cantón: ${this.cantonName}`);
+
+          // Emitimos el objeto completo con la estructura correcta
+          this.locationSelected.emit({
+            lat: lat,
+            lng: lng,
+            canton: this.cantonName,
+            province: this.provinceName,
+            country: this.countryName,
+            direccionFisica: this.address,
+            addressURl: this.mapUrl,
+            address: this.address,
+          });
+
+        } else {
+          console.log('No se encontraron resultados para la ubicación.');
+          // Puedes emitir valores por defecto si lo deseas
+        }
+      },
+      error: error => {
+        console.error('Error al obtener datos de geolocalización:', error);
+      }
+    });
+  }
+
+   private findAddressComponent(components: any[], type: string): string {
+    const component = components.find(c => c.types.includes(type));
+    return component ? component.long_name : 'N/A';
   }
 
 }

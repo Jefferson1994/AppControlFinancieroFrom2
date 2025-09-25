@@ -5,33 +5,52 @@
     </header>
 
     <div class="toolbar">
-        <input type="text" class="search-input" placeholder="Buscar servicio...">
-        <select class="filter-select">
+        <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar servicio..."
+            [(ngModel)]="terminoBusqueda"
+            (ngModelChange)="aplicarFiltros()">
+
+        <select
+            class="filter-select"
+            [(ngModel)]="categoriaSeleccionada"
+            (ngModelChange)="aplicarFiltros()">
+
             <option value="">Todas las categorías</option>
-            <option value="cortes">Cortes de Cabello</option>
-            <option value="tratamientos">Tratamientos</option>
+            <option value="Cortes de Cabello">Cortes de Cabello</option>
+            <option value="Tratamientos">Tratamientos</option>
         </select>
     </div>
 
     <div class="service-grid">
-        
-        @for (servicio of servicios; track servicio.nombre) {
-            <div class="service-card">
-                <img [src]="servicio.imageUrl" [alt]="servicio.nombre" class="service-card-image">
-                <div class="service-card-content">
-                    <div class="service-card-header">
-                        <h3 class="service-card-title">{{ servicio.nombre }}</h3>
-                        <span class="service-card-price">{{ servicio.precio | currency }}</span>
-                    </div>
-                    <p class="service-card-details">{{ servicio.categoria }} • {{ servicio.duracion }}</p>
-                    <p class="service-card-description">{{ servicio.descripcion }}</p>
-                    <div class="service-card-footer">
-                        <span class="status-badge" [class]="servicio.statusClass">{{ servicio.status }}</span>
-                        <button class="action-button" title="Acciones">...</button>
-                    </div>
-                </div>
-            </div>
-        }
+
+          @for (servicio  of serviciosFiltrados; track servicio.id) { <div class="service-card">
+
+              <div *ngIf="servicio.id" class="card-image-container">
+                  <!--<img [src]="servicio.id | safeUrl" [alt]="servicio.nombre" class="service-card-image">-->
+                  <img src="https://media.gettyimages.com/id/1582664831/es/foto/el-motociclista-con-equipo-de-seguridad-completo-disfruta-del-paseo-por-la-carretera-rural.jpg?s=170667a&w=gi&k=20&c=iGwN6Nlz3gowsRVeWCVG4BknHymzFOXcsQz4r7hpDg0=" alt="{{ servicio.nombre }}" class="service-card-image">
+              </div>
+
+              <div class="service-card-content">
+                  <div class="service-card-header">
+                      <h3 class="service-card-title">{{ servicio.nombre }}</h3>
+                      <span class="service-card-price">{{ servicio.precio | currency }}</span>
+                  </div>
+
+                  <p class="service-card-details">{{ servicio.tipoServicio.nombre }} • {{ servicio.duracion_minutos }} min</p>
+
+                  <p class="service-card-description">{{ servicio.descripcion }}</p>
+
+                  <div class="service-card-footer">
+                      <span class="status-badge" [ngClass]="servicio.activo === 1 ? 'status-active' : 'status-inactive'">
+                          {{ servicio.activo === 1 ? 'Activo' : 'Inactivo' }}
+                      </span>
+                      <button class="action-button" title="Acciones">...</button>
+                  </div>
+              </div>
+          </div>
+      }
 
     </div>
 </div>

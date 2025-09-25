@@ -39,7 +39,7 @@ export class CrearServicioComponent implements OnInit {
     precio_descuento: null,
     porcentaje_descuento: null,
     porcentaje_comision_colaborador: null,
-    activo: 0,
+    activo: 1,
     id_negocio: null,
     id_tipo_servicio: null,
     duracion_minutos: null,

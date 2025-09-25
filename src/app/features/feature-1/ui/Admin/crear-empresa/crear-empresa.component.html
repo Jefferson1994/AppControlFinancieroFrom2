@@ -65,6 +65,47 @@
           <label for="email">Email</label>
           <input type="email" id="email" name="email_contacto" ngModel required>
         </div>
+        <div class="form-group full-width image-upload-section"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+            [class.drag-over]="isDragging">
+
+            <h3>Subir Imágenes (Máx. 3)</h3>
+
+            <input
+                type="file"
+                #fileInput
+                (change)="onFileSelected($event)"
+                accept="image/*"
+                multiple
+                style="display: none;">
+
+            <button type="button" class="btn-secondary" (click)="fileInput.click()">
+                Seleccionar Imágenes
+            </button>
+
+            <p *ngIf="isDragging" class="drop-prompt">Suelta las imágenes aquí</p>
+
+            <small *ngIf="!isDragging && selectedFiles.length === 0" style="margin-left: 10px;">
+                o arrastra los archivos aquí
+            </small>
+
+            <div class="image-previews">
+                @for (image of imagePreviews; track $index) {
+                    <div class="image-preview-item">
+                        <img [src]="image" alt="Previsualización" class="thumbnail">
+                        <button type="button" class="remove-image-btn" (click)="removeImage($index)" title="Eliminar imagen">
+                            &times;
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <small *ngIf="selectedFiles.length >= 4" class="text-warning">
+                Has alcanzado el límite maximo 3 imágenes.
+            </small>
+        </div>
         <div class="form-group full-width">
           <h3>Seleccione la ubicación de la empresa</h3>
           <app-component-mapa-registro (locationSelected)="onLocationSelected($event)"></app-component-mapa-registro>

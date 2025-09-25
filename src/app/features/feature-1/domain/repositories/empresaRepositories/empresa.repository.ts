@@ -4,7 +4,7 @@ import { EmpresasInterfas,CrearEmpresaDTO,CrearEmpresaResponse,
   AgregarColaboradorResponse,
   ActualizarrEmpresaDTO,
   RespuestaProductos,
-  EstadisticasInventario} from '../../models/empresa.models';
+  EstadisticasInventario, RespuestaServicios} from '../../models/empresa.models';
 
 export interface empresaRepositorio {
   todasEmpresasXAdmin(idAdministrador: number,token: string): Promise<EmpresasInterfas[]>;
@@ -16,5 +16,6 @@ export interface empresaRepositorio {
   actualizarEmpresa(empresa: ActualizarrEmpresaDTO,idEmpresa:number): Promise<CrearEmpresaResponse>;
   ListaProductosXEmpresa(idEmpresa: number): Promise<RespuestaProductos>;
   ListaEstadisticasXEmpresa(idEmpresa: number): Promise<EstadisticasInventario>
+  ListaServicioXEmpresa(idEmpresa: number): Promise<RespuestaServicios>
 }
 

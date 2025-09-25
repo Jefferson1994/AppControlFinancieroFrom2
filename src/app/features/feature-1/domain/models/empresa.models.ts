@@ -51,6 +51,8 @@ export interface CrearEmpresaDTO {
     pais: string;
     latitud: number;
     longitud: number;
+    direccion: string;
+
   };
 }
 
@@ -213,3 +215,37 @@ export interface EstadisticasInventario {
   productosConPocoStock: number;
   gananciaPotencial: number;
 }
+
+//servicios interfas
+
+export interface TipoServicio {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  activo: number;
+}
+
+export interface Servicios {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  precio_descuento: number;
+  porcentaje_descuento: number;
+  id_negocio: number;
+  id_tipo_servicio: number;
+  duracion_minutos: number;
+  id_tipo_producto: number;
+  porcentaje_comision_colaborador: number;
+  activo: number;
+  tipoServicio: TipoServicio; // <-- Aquí se anida la interfaz anterior
+}
+export interface RespuestaServicios {
+  mensaje: string;
+  servicios: Servicios[]; // Un arreglo de la interfaz Producto
+}
+
+
+
+
+

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, ViewChild, ElementRef,ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CrearEmpresaDTO, CrearEmpresaResponse } from '../../../domain/models/empresa.models';
@@ -22,19 +22,33 @@ export class CrearEmpresaComponent {
     lng: number;
     canton: string;
     province: string;
-    address: string;
+    addressURl: string;
+    country: string;
+    direccionFisica: string;
   } = {
     lat: 0,
     lng: 0,
     canton: 'N/A',
     province: 'N/A',
-    address: 'N/A'
+    addressURl: 'N/A',
+    country: 'N/A',
+    direccionFisica: 'N/A'
   };
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  // (NUEVO) Almacena los archivos de imagen seleccionados (los objetos File)
+  selectedFiles: File[] = [];
+  // (NUEVO) Almacena las URLs de las imágenes para la previsualización
+  imagePreviews: string[] = [];
+  isDragging = false;
+  imagenes!: string[];
 
   constructor(
     private crearEmpresasUseCase: crearEmpresasUseCase,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
 
   currentStep = signal<number>(1);
@@ -66,32 +80,178 @@ export class CrearEmpresaComponent {
     }
   }
 
-  async enviarFormulario(formValue: any): Promise<void> {
+  /*async enviarFormulario(formValue: any): Promise<void> {
     const user = this.authService.getCurrentUser();
 
     if (user && user.user && user.token) {
       // ✅ Combina los datos de ambos pasos en un solo objeto DTO
       const empresaParaCrear: CrearEmpresaDTO = {
-        ...this.datosPrimerPaso, // Usa los datos guardados del primer paso
-        datos_contacto: formValue.datos_contacto, // Usa los datos del segundo paso
+        ...this.datosPrimerPaso,
+        datos_contacto: {
+          ...formValue.datos_contacto,
+          // Agregamos los datos del mapa que ya tienes guardados
+          ciudad: this.selectedLocation.canton,
+          provincia: this.selectedLocation.province,
+          pais: this.selectedLocation.country, // O un valor dinámico si lo tienes
+          latitud: this.selectedLocation.lat,
+          longitud: this.selectedLocation.lng,
+          direccionUrl: this.selectedLocation.addressURl,
+          direccionFisica: this.selectedLocation.direccionFisica
+        },
+        // (NUEVO) Aquí pasamos el array con las imágenes en Base64
+        imagenes: this.imagePreviews
       };
+
+      if (this.selectedFiles.length === 0) {
+        console.error('Error: Debes subir al menos una imagen.');
+        //PONER ALERTA DE IMAGENES
+        return;
+      }
+
+      if (this.selectedLocation.lat === 0 && this.selectedLocation.lng === 0) {
+        console.error('Error: Debes seleccionar una ubicación en el mapa.');
+        // PONER ALERTA DEL MAPA
+        return;
+      }
 
       console.log("Objeto final para enviar:", JSON.stringify(empresaParaCrear));
 
       try {
-        const respuesta = await this.crearEmpresasUseCase.execute(empresaParaCrear);
-        console.log('Empresa creada:', respuesta);
-        this.router.navigate(['/admin-dashboard/empresalist']);
+        //const respuesta = await this.crearEmpresasUseCase.execute(empresaParaCrear);
+        //console.log('Empresa creada:', respuesta);
+        //this.router.navigate(['/admin-dashboard/empresalist']);
       } catch (error) {
         console.error('Error al crear la empresa:', error);
       }
     } else {
       console.error('No se pudo enviar el formulario: usuario no autenticado.');
     }
+  }*/
+  async enviarFormulario(formValue: any): Promise<void> {
+    const user = this.authService.getCurrentUser();
+
+    if (!user || !user.user || !user.token) {
+      console.error('No se pudo enviar el formulario: usuario no autenticado.');
+      return;
+    }
+
+    if (this.selectedFiles.length === 0) {
+      console.error('Error: Debes subir al menos una imagen.');
+
+      return;
+    }
+    if (this.selectedLocation.lat === 0 && this.selectedLocation.lng === 0) {
+      console.error('Error: Debes seleccionar una ubicación en el mapa.');
+
+      return;
+    }
+
+
+    const formData = new FormData();
+
+
+    formData.append('nombre', this.datosPrimerPaso.nombre);
+    formData.append('ruc', this.datosPrimerPaso.ruc);
+    formData.append('descripcion', this.datosPrimerPaso.descripcion);
+    formData.append('id_tipo_empresa', this.datosPrimerPaso.id_tipo_empresa.toString());
+    formData.append('direccion', this.datosPrimerPaso.direccion);
+    formData.append('horario_apertura', this.datosPrimerPaso.horario_apertura);
+    formData.append('horario_cierre', this.datosPrimerPaso.horario_cierre);
+
+    const datosContacto = {
+      telefono_contacto: formValue.datos_contacto.telefono_contacto,
+      email_contacto: formValue.datos_contacto.email_contacto,
+      ciudad: this.selectedLocation.canton,
+      provincia: this.selectedLocation.province,
+      pais: this.selectedLocation.country,
+      latitud: this.selectedLocation.lat,
+      longitud: this.selectedLocation.lng,
+      direccionUrl: this.selectedLocation.addressURl,
+      direccionFisica: this.selectedLocation.direccionFisica,
+    };
+    formData.append('datos_contacto', JSON.stringify(datosContacto));
+
+
+    this.selectedFiles.forEach(file => {
+      formData.append('imagenes', file, file.name);
+    });
+
+    try {
+      console.log('Enviando FormData al backend...');
+
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+
+      // Tu servicio (UseCase) ahora debe enviar el objeto 'formData'.
+      //const respuesta = await this.crearEmpresasUseCase.execute(formData);
+
+      //this.router.navigate(['/admin-dashboard/empresalist']);
+
+    } catch (error) {
+      console.error('Error al crear la empresa:', error);
+      // Aquí podrías mostrar un mensaje de error al usuario
+    }
   }
 
-   onLocationSelected(locationData: { lat: number; lng: number; canton: string; province: string; address: string }) {
+  onLocationSelected(locationData: { lat: number; lng: number; canton: string; province: string; address: string , addressURl: string, country: string, direccionFisica: string}): void {
     this.selectedLocation = locationData;
     console.log('Selected Location:', this.selectedLocation);
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
+  }
+
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.processFiles(files);
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.processFiles(input.files);
+      input.value = '';
+    }
+  }
+
+
+  private processFiles(files: FileList): void {
+    Array.from(files).forEach(file => {
+      if (this.selectedFiles.length < 4 && file.type.startsWith('image/')) {
+        this.selectedFiles.push(file);
+        this.previewImage(file);
+      }
+    });
+  }
+
+  private previewImage(file: File): void {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviews.push(reader.result as string);
+      this.cd.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(index: number): void {
+    this.selectedFiles.splice(index, 1);
+    this.imagePreviews.splice(index, 1);
   }
 }
