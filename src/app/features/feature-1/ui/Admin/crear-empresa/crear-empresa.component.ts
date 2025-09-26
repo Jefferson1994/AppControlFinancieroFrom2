@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, ViewChild, ElementRef,ChangeDetectorRef  } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, ViewChild, ElementRef,ChangeDetectorRef, inject  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CrearEmpresaDTO, CrearEmpresaResponse } from '../../../domain/models/empresa.models';
@@ -6,6 +6,8 @@ import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { crearEmpresasUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/crearEmpresa.use.case';
 import { ComponentMapaRegistroComponent } from "../component-mapa-registro/component-mapa-registro.component";
+import { AlertService } from '../../../services/alert.service';
+import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'app-crear-empresa',
@@ -43,6 +45,9 @@ export class CrearEmpresaComponent {
   imagePreviews: string[] = [];
   isDragging = false;
   imagenes!: string[];
+  private alertService = inject(AlertService);
+  private loadingService = inject(LoadingService);
+  loading = true;
 
   constructor(
     private crearEmpresasUseCase: crearEmpresasUseCase,
@@ -80,53 +85,7 @@ export class CrearEmpresaComponent {
     }
   }
 
-  /*async enviarFormulario(formValue: any): Promise<void> {
-    const user = this.authService.getCurrentUser();
 
-    if (user && user.user && user.token) {
-      // ✅ Combina los datos de ambos pasos en un solo objeto DTO
-      const empresaParaCrear: CrearEmpresaDTO = {
-        ...this.datosPrimerPaso,
-        datos_contacto: {
-          ...formValue.datos_contacto,
-          // Agregamos los datos del mapa que ya tienes guardados
-          ciudad: this.selectedLocation.canton,
-          provincia: this.selectedLocation.province,
-          pais: this.selectedLocation.country, // O un valor dinámico si lo tienes
-          latitud: this.selectedLocation.lat,
-          longitud: this.selectedLocation.lng,
-          direccionUrl: this.selectedLocation.addressURl,
-          direccionFisica: this.selectedLocation.direccionFisica
-        },
-        // (NUEVO) Aquí pasamos el array con las imágenes en Base64
-        imagenes: this.imagePreviews
-      };
-
-      if (this.selectedFiles.length === 0) {
-        console.error('Error: Debes subir al menos una imagen.');
-        //PONER ALERTA DE IMAGENES
-        return;
-      }
-
-      if (this.selectedLocation.lat === 0 && this.selectedLocation.lng === 0) {
-        console.error('Error: Debes seleccionar una ubicación en el mapa.');
-        // PONER ALERTA DEL MAPA
-        return;
-      }
-
-      console.log("Objeto final para enviar:", JSON.stringify(empresaParaCrear));
-
-      try {
-        //const respuesta = await this.crearEmpresasUseCase.execute(empresaParaCrear);
-        //console.log('Empresa creada:', respuesta);
-        //this.router.navigate(['/admin-dashboard/empresalist']);
-      } catch (error) {
-        console.error('Error al crear la empresa:', error);
-      }
-    } else {
-      console.error('No se pudo enviar el formulario: usuario no autenticado.');
-    }
-  }*/
   async enviarFormulario(formValue: any): Promise<void> {
     const user = this.authService.getCurrentUser();
 
@@ -136,12 +95,15 @@ export class CrearEmpresaComponent {
     }
 
     if (this.selectedFiles.length === 0) {
+
       console.error('Error: Debes subir al menos una imagen.');
+      this.alertService.showError('Error: Debes subir al menos una imagen.');
 
       return;
     }
     if (this.selectedLocation.lat === 0 && this.selectedLocation.lng === 0) {
       console.error('Error: Debes seleccionar una ubicación en el mapa.');
+      this.alertService.showError('Error: Debes seleccionar una ubicación en el mapa.');
 
       return;
     }
@@ -177,20 +139,24 @@ export class CrearEmpresaComponent {
     });
 
     try {
+      this.loading = true;      // <-- Inicia la carga del componente
+      this.loadingService.show();
       console.log('Enviando FormData al backend...');
 
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
+      //for (const [key, value] of formData.entries()) {
+      //  console.log(`${key}:`, value);
+      //}
+      const respuesta = await this.crearEmpresasUseCase.execute(formData);
 
-      // Tu servicio (UseCase) ahora debe enviar el objeto 'formData'.
-      //const respuesta = await this.crearEmpresasUseCase.execute(formData);
-
-      //this.router.navigate(['/admin-dashboard/empresalist']);
+      this.router.navigate(['/admin-dashboard/empresalist']);
 
     } catch (error) {
+      this.alertService.showError('Error al crear la empresa:');
       console.error('Error al crear la empresa:', error);
       // Aquí podrías mostrar un mensaje de error al usuario
+    }finally{
+      this.loading = false;
+      this.loadingService.hide();
     }
   }
 

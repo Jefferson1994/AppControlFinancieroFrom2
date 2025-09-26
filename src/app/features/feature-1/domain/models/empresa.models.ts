@@ -14,7 +14,14 @@ export interface EmpresasInterfas {
   creado_en: string;
   datosContactoEmpresa: DatosContactoEmpresa;
   tipoEmpresa: TipoEmpresa;
-  urlImagen:string;
+  imagenes: ImagenEmpresa[];
+}
+
+export interface ImagenEmpresa {
+  id: number;
+  id_empresa: number;
+  url_imagen: string;
+  orden: number;
 }
 
 export interface DatosContactoEmpresa {

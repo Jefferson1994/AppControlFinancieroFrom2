@@ -43,10 +43,10 @@ export class ListarProductosComponent implements OnInit {
   totalProductos: number | null = null;
   productosPocostok: number | null = null;
   ganaciaPotencial: number | null = null;
-    private alertService = inject(AlertService);
-    private loadingService = inject(LoadingService);
+  private alertService = inject(AlertService);
+  private loadingService = inject(LoadingService);
 
-    loading = true;
+  loading = true;
 
   constructor(private ListarProductoxEmpresaUseCase :listarProductoxEmpresaUseCase,
     private ListarEstadisticasxEmpresaUseCase : listarEstadisticasxEmpresaUseCase,
@@ -174,7 +174,7 @@ async ngOnInit(): Promise<void> {
   }
   }
 
-  
+
 
 
 

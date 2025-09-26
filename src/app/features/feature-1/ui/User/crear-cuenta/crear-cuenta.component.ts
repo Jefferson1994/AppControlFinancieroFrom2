@@ -2,8 +2,9 @@ import { Component, ChangeDetectionStrategy, signal, Input, Output, EventEmitter
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CrearUsuarioResponse, RolUsuario } from '../../../domain/models/userModelos';
+import { CiudadanoEstandar, CrearUsuarioResponse, RolUsuario } from '../../../domain/models/userModelos';
 import { crearUsuarioUseCase } from '../../../domain/use-cases/use-caseUsuario/crearUsuario.use-case';
+import { buscarUserCiudadanoUseCase } from '../../../domain/use-cases/use-caseUsuario/userBuscarCiudadano.use.case';
 import { UserRolUseCase } from '../../../domain/use-cases/use-caseUsuario/roles.use-case';
 import { Injectable } from '@angular/core';
 import Swal, { SweetAlertIcon, SweetAlertResult } from 'sweetalert2';
@@ -22,6 +23,9 @@ export class CrearCuentaComponent implements OnInit  {
   private alertService = inject(AlertService);
   private loadingService = inject(LoadingService);
 
+  loading = true;
+
+
   registro: any = {
     nombre: '',
     correo: '',
@@ -32,8 +36,13 @@ export class CrearCuentaComponent implements OnInit  {
   };
 
   public roles: RolUsuario[] = [];
+  identificacionParaValidar: string = '';
+  ciudadanoValidado: CiudadanoEstandar | null = null;
+  errorValidacion: string | null = null;
 
-  constructor(private router: Router, private  crearUserUseCase :crearUsuarioUseCase, private rolesUseCase: UserRolUseCase) {}
+
+  constructor(private router: Router, private  crearUserUseCase :crearUsuarioUseCase,
+    private rolesUseCase: UserRolUseCase,private BuscarUserCiudadanoUseCase:buscarUserCiudadanoUseCase) {}
 
  async ngOnInit(): Promise<void> {
     try {
@@ -50,7 +59,7 @@ export class CrearCuentaComponent implements OnInit  {
     }
   }
 
- 
+
 
   async onSubmit(form: NgForm): Promise<void> {
     if (!form.valid) {
@@ -87,4 +96,45 @@ export class CrearCuentaComponent implements OnInit  {
   closeModal(): void {
     this.modalClosed.emit();
   }
+
+    async onIdentificacionChange(): Promise<void> {
+      // 1. Validar la longitud antes de hacer la llamada
+      console.log('Identificación ingresada:', this.registro.numero_identificacion);
+      if (this.registro.numero_identificacion.length !== 10) {
+        // No hacemos nada si no es una cédula de 10 dígitos
+        this.ciudadanoValidado = null;
+        return;
+      }
+
+ 
+      this.ciudadanoValidado = null;
+      this.errorValidacion = null;
+
+      try {
+        this.loadingService.show();
+        const request = { tipo: 'C', identificacion: this.registro.numero_identificacion };
+
+        // 3. Ejecutar el caso de uso
+        const respuesta = await this.BuscarUserCiudadanoUseCase.execute(request);
+
+        // 4. Manejar la respuesta
+        if (respuesta.ok && respuesta.datos) {
+          this.ciudadanoValidado = respuesta.datos;
+          this.registro.nombre = respuesta.datos.nombreCompleto;
+          console.log('Ciudadano validado:', this.ciudadanoValidado);
+          // Aquí podrías autocompletar otros campos del formulario
+        } else {
+          this.errorValidacion = 'La identificación no es válida o no se encontró.';
+        }
+
+      } catch (error) {
+        console.error('Error al validar ciudadano:', error);
+        this.errorValidacion = 'Ocurrió un error al conectar con el servicio.';
+      } finally {
+        // 5. Ocultar el indicador de carga, tanto en éxito como en error
+        this.loadingService.hide();
+
+      }
+    }
+
 }

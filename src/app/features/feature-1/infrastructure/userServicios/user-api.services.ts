@@ -4,7 +4,9 @@ import { lastValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { UserCredentials, UserResponse,UserCredentialsBuscar,BuscarColaboradorResponse,
   CrearUsuarioDTO,CrearUsuarioResponse,
-  RolUsuario
+  RolUsuario,
+  ValidacionRequest,
+  ValidacionResponse
  } from '../../domain/models/userModelos'; // Asegúrate de que los paths sean correctos
 import { UserRepositorio } from '../../domain/repositories/userRepositories/user.repository'; // El contrato del repositorio
 
@@ -78,5 +80,26 @@ export class UserApiRepository implements UserRepositorio {
         // El manejo del error está bien como lo tienes
         throw error;
     }
+  }
+
+  async BuscarCiudadano(userBuscar: ValidacionRequest): Promise<ValidacionResponse> {
+      const url = `${this.baseUrl}api/ciudadanos/validar`;
+      //const body = { CrearEmpresaDTO };
+
+      try {
+
+        const response = await lastValueFrom(
+            this.http.post<ValidacionResponse>(url, userBuscar)
+          );
+
+          console.log('Respuesta del API:', response);
+
+          // 2. CORRECCIÓN: Se retorna el objeto 'response' completo.
+          return response;
+      } catch (error) {
+        // El repositorio solo relanza el error. La lógica de manejo
+        // específica va en el caso de uso o el componente.
+        throw error;
+      }
   }
 }

@@ -8,7 +8,7 @@ import { EmpresasInterfas,CrearEmpresaDTO,CrearEmpresaResponse,
 
 export interface empresaRepositorio {
   todasEmpresasXAdmin(idAdministrador: number,token: string): Promise<EmpresasInterfas[]>;
-  CrearEmpresa(empresa: CrearEmpresaDTO): Promise<CrearEmpresaResponse>;
+  CrearEmpresa(empresa: FormData): Promise<CrearEmpresaResponse>;
   CrearProducto(producto: CrearProductoDTO): Promise<CrearProductoResponse>;
   CrearServicio(producto: CrearServicioDTO): Promise<CrearServicioResponse>;
   AgregarColaborador(AgregarColaborador: AgregarColaboradorDTO): Promise<AgregarColaboradorResponse>;

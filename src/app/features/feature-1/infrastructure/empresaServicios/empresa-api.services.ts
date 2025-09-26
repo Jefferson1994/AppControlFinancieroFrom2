@@ -40,7 +40,7 @@ export class UserApiRepository implements empresaRepositorio {
     }
   }
 
-  async CrearEmpresa(empresa: CrearEmpresaDTO): Promise<CrearEmpresaResponse> {
+  async CrearEmpresa(empresa: FormData): Promise<CrearEmpresaResponse> {
     const url = `${this.baseUrl}empresa/crearEmpresa`;
     //const body = { CrearEmpresaDTO };
 

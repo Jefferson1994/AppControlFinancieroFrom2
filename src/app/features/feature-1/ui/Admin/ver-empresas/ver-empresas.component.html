@@ -17,7 +17,13 @@
       </div>
       <div class="card-body">
         <div class="card-image-container">
-          <img [src]="empresa.urlImagen | safeUrl" alt="Imagen de {{ empresa.nombre }}">
+
+          @if (empresa.imagenes && empresa.imagenes.length > 0) {
+            <img [src]="empresa.imagenes[0].url_imagen | safeUrl" alt="Imagen de {{ empresa.nombre }}">
+          } @else {
+            <img src="assets/images/placeholder.png" alt="Sin imagen disponible">
+          }
+
         </div>
         <p><strong>RUC:</strong> {{ empresa.ruc }}</p>
         <p><strong>Código:</strong> {{ empresa.codigo_establecimiento }}</p>

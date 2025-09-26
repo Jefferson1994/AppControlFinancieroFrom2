@@ -83,5 +83,23 @@ export interface RolUsuario {
   id: number;
   nombre: string;
   descripcion: string;
-  activo: number; 
+  activo: number;
+}
+
+export interface CiudadanoEstandar {
+    identificacion: string;
+    nombreCompleto: string;
+    nombres: string;
+    apellidos: string;
+    fechaDefuncion: string | null;
+}
+
+
+export interface ValidacionResponse {
+    ok: boolean;
+    datos?: CiudadanoEstandar;
+}
+export interface ValidacionRequest {
+    tipo: string;
+    identificacion: string;
 }

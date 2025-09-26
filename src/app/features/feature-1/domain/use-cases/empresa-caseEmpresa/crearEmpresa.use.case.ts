@@ -9,7 +9,7 @@ export class crearEmpresasUseCase {
 
   constructor(private readonly repository: UserApiRepository) {}
 
-  async execute(empresa: CrearEmpresaDTO): Promise<CrearEmpresaResponse> {
+  async execute(empresa: FormData): Promise<CrearEmpresaResponse> {
     console.log("la empresa en el caso de uso ", JSON.stringify(empresa) );
 
     try {
