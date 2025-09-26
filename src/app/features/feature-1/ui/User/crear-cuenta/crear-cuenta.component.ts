@@ -120,7 +120,7 @@ export class CrearCuentaComponent implements OnInit  {
         // 4. Manejar la respuesta
         if (respuesta.ok && respuesta.datos) {
           this.ciudadanoValidado = respuesta.datos;
-          this.registro.nombre = respuesta.datos.nombreCompleto;
+          this.registro.nombre = this.ciudadanoValidado.Nombres + ' '+ this.ciudadanoValidado.Nombres + ' '+respuesta.datos.fechaNacimiento+ ' '+respuesta.datos.edad;
           console.log('Ciudadano validado:', this.ciudadanoValidado);
           // Aquí podrías autocompletar otros campos del formulario
         } else {

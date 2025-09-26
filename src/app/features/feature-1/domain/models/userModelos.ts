@@ -89,8 +89,10 @@ export interface RolUsuario {
 export interface CiudadanoEstandar {
     identificacion: string;
     nombreCompleto: string;
-    nombres: string;
-    apellidos: string;
+    Nombres: string;
+    Apellidos: string;
+    fechaNacimiento: string;
+    edad:number
     fechaDefuncion: string | null;
 }
 
