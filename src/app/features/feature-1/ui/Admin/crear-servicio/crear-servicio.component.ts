@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, Input, Output, EventEmitter, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,6 +6,9 @@ import { crearServicesUseCase } from '../../../../feature-1/domain/use-cases/emp
 import { AuthService } from '../../../services/auth.service';
 import { AlertService } from '../../../services/alert.service';
 import { LoadingService } from '../../../services/loading.service';
+import { TipoServicio } from '../../../domain/models/empresa.models';
+import { listarTiposServiciosxEmpresaUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/listarTipoServicioXEmpresa.use.case';
+
 
 @Component({
   selector: 'app-crear-servicio',
@@ -17,11 +20,6 @@ import { LoadingService } from '../../../services/loading.service';
 })
 export class CrearServicioComponent implements OnInit {
 
-  constructor(
-      private crearServicioUseCase: crearServicesUseCase,
-      private authService: AuthService,private router: Router
-
-  ) {}
 
   @Input() idEmpresa: number | undefined;
   @Input() nombreEmpresa: string | undefined;
@@ -44,6 +42,22 @@ export class CrearServicioComponent implements OnInit {
     id_tipo_servicio: null,
     duracion_minutos: null,
   });
+  imagePreviews: string[] = [];
+  selectedFiles: File[] = [];
+  isDragging = false;
+  imagenes!: string[];
+
+  tiposDeServicio = signal<TipoServicio[]>([]);
+    
+    // Señal para manejar errores (buena práctica)
+  error = signal<string | null>(null);
+
+  constructor(
+      private crearServicioUseCase: crearServicesUseCase,
+      private authService: AuthService,private router: Router,
+      private cd: ChangeDetectorRef, private listaTiposServicio : listarTiposServiciosxEmpresaUseCase
+
+  ) {}
 
 
 
@@ -51,6 +65,7 @@ export class CrearServicioComponent implements OnInit {
     if (this.idEmpresa) {
       this.servicio.update(serv => ({ ...serv, id_negocio: this.idEmpresa }));
       console.log('Creando servicio para la empresa:', this.nombreEmpresa, 'con ID:', this.idEmpresa);
+      this.cargarTiposDeServicios();
     }
   }
 
@@ -83,5 +98,77 @@ export class CrearServicioComponent implements OnInit {
 
   closeModal(): void {
     this.modalClosed.emit();
+  }
+
+  //manejar imagenes 
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
+  }
+
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.processFiles(files);
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.processFiles(input.files);
+      input.value = '';
+    }
+  }
+
+
+  private processFiles(files: FileList): void {
+    Array.from(files).forEach(file => {
+      if (this.selectedFiles.length < 4 && file.type.startsWith('image/')) {
+        this.selectedFiles.push(file);
+        this.previewImage(file);
+      }
+    });
+  }
+
+  private previewImage(file: File): void {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviews.push(reader.result as string);
+      this.cd.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(index: number): void {
+    this.selectedFiles.splice(index, 1);
+    this.imagePreviews.splice(index, 1);
+  }
+
+  async cargarTiposDeServicios(): Promise<void> {
+    try {
+
+      const idEmpresa = 1; 
+      const respuesta = await this.listaTiposServicio.execute(idEmpresa);
+      console.log('la respuesta de los tipos de servicios',JSON.stringify(respuesta))
+      this.tiposDeServicio.set(respuesta);
+
+    } catch (err: any) {
+      // Si ocurre un error, lo guardamos para mostrarlo en el HTML
+      this.error.set('No se pudieron cargar los tipos de producto.');
+      console.error(err);
+    }
   }
 }

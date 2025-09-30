@@ -13,14 +13,19 @@
             <input type="text" id="nombre" name="nombre" [(ngModel)]="producto().nombre" required>
           </div>
           <div class="form-group">
-            <label for="tipoProducto">Tipo de Producto</label>
-            <select id="tipoProducto" name="id_tipo_producto" [(ngModel)]="producto().id_tipo_producto" required>
-              <option value="" disabled selected>Selecciona un tipo</option>
-              <option value="1">Shampoo</option>
-              <option value="2">Acondicionador</option>
-              <option value="3">Crema para Afeitar</option>
-              <option value="4">Cera Fijadora</option>
-            </select>
+              <label for="tipoProducto">Tipo de Producto</label>
+              
+              <select id="tipoProducto" name="id_tipo_producto" [(ngModel)]="producto().id_tipo_producto" required [disabled]="tiposDeProducto().length === 0">
+                  <option [ngValue]="null" disabled selected>Selecciona un tipo</option>
+                  
+                  <option *ngFor="let tipo of tiposDeProducto()" [value]="tipo.id">
+                      {{ tipo.nombre }}
+                  </option>
+              </select>
+
+              @if (error()) {
+                  <div class="error-message">{{ error() }}</div>
+              }
           </div>
           <div class="form-group full-width">
             <label for="descripcion">Descripción</label>
@@ -45,6 +50,47 @@
           <div class="form-group">
             <label for="stock">Stock Actual</label>
             <input type="number" id="stock" name="stock_actual" [(ngModel)]="producto().stock_actual" required min="0">
+          </div>
+          <div class="form-group full-width image-upload-section"
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)"
+                [class.drag-over]="isDragging">
+
+                <h3>Subir Imágenes (Máx. 3)</h3>
+
+                <input
+                    type="file"
+                    #fileInput
+                    (change)="onFileSelected($event)"
+                    accept="image/*"
+                    multiple
+                    style="display: none;">
+
+                <button type="button" class="btn-secondary" (click)="fileInput.click()">
+                    Seleccionar Imágenes
+                </button>
+
+                <p *ngIf="isDragging" class="drop-prompt">Suelta las imágenes aquí</p>
+
+                <small *ngIf="!isDragging && selectedFiles.length === 0" style="margin-left: 10px;">
+                    o arrastra los archivos aquí
+                </small>
+
+                <div class="image-previews">
+                    @for (image of imagePreviews; track $index) {
+                        <div class="image-preview-item">
+                            <img [src]="image" alt="Previsualización" class="thumbnail">
+                            <button type="button" class="remove-image-btn" (click)="removeImage($index)" title="Eliminar imagen">
+                                &times;
+                            </button>
+                        </div>
+                    }
+                </div>
+
+                <small *ngIf="selectedFiles.length >= 4" class="text-warning">
+                    Has alcanzado el límite maximo 3 imágenes.
+                </small>
           </div>
         </div>
 
