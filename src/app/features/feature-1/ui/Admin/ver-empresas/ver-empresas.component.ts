@@ -35,9 +35,20 @@ export class VerEmpresasComponent implements OnInit {
   crearEmpresa = true;
   showProductModal = false;
   showProductModalServicio = false;
+
+  // Para productos
+  selectedProductoEmpresaId: number | null = null;
+  selectedProductoEmpresaNombre: string | null = null;
+  selectedProductoTipoEmpresaId: number | null = null;
+
+  // Para servicios
+  selectedServicioEmpresaId: number | null = null;
+  selectedServicioEmpresaNombre: string | null = null;
+  selectedServicioTipoEmpresaId: number | null = null;
+
+ // colaborador 
   selectedEmpresaId: number | null = null;
   selectedEmpresaNombre: string | null = null;
-  selectedidTipoEmpresa: number | null = null;
 
 
 
@@ -127,10 +138,10 @@ async cargarEmpresas(): Promise<void> {
   }
 
   openProductModal(empresa: EmpresasInterfas): void {
-    this.selectedEmpresaId = empresa.id;
-    this.selectedEmpresaNombre = empresa.nombre;
-    console.log("el id del tipo de empresa es ", empresa.tipoEmpresa.id)
-    this.selectedidTipoEmpresa =  empresa.tipoEmpresa.id;
+    this.selectedProductoEmpresaId  = empresa.id;
+    this.selectedProductoEmpresaNombre  = empresa.nombre;
+    console.log("el id del tipo de empresa es al dar cliek en el modal ", empresa.tipoEmpresa.id)
+    this.selectedProductoTipoEmpresaId  =  empresa.tipoEmpresa.id;
     this.showProductModal = true;
   }
 
@@ -148,6 +159,7 @@ async cargarEmpresas(): Promise<void> {
 
   openListarProductos(empresa: EmpresasInterfas): void {
     // Usamos el Router para navegar a la ruta y pasar el ID como parámetro
+    console.log('el ide para la empresa es producto ',empresa.id)
     this.router.navigate(['/admin-dashboard/verTodosProductos', empresa.id]);
   }
   openListarServicios(empresa: EmpresasInterfas): void {
@@ -158,14 +170,40 @@ async cargarEmpresas(): Promise<void> {
   // ✅ New method to close the modal
   async onModalClosed(): Promise<void> {
     this.showProductModal = false;
+    this.showProductModalServicio = false;
+    this.modoAgregarColaborador = false;
     this.selectedEmpresaId = null;
+    this.selectedEmpresaNombre = null;
+
+    this.showProductModal = false;
+    this.selectedProductoEmpresaId = null;
+    this.selectedProductoEmpresaNombre = null;
+    this.selectedProductoTipoEmpresaId = null;
+
+    this.showProductModalServicio = false;
+    this.selectedServicioEmpresaId = null;
+    this.selectedServicioEmpresaNombre = null;
+    this.selectedServicioTipoEmpresaId = null;
     // ✅ Usa 'await' para esperar a que la lista de empresas se recargue
     await this.cargarEmpresas();
   }
 
   async onModalClosedDetalleEmpresa(): Promise<void> {
     this.modoDetalleEmpresa = false;
+    this.showProductModalServicio = false;
+    this.modoAgregarColaborador = false;
     this.selectedEmpresaId = null;
+    this.selectedEmpresaNombre = null;
+
+    this.showProductModal = false;
+    this.selectedProductoEmpresaId = null;
+    this.selectedProductoEmpresaNombre = null;
+    this.selectedProductoTipoEmpresaId = null;
+
+    this.showProductModalServicio = false;
+    this.selectedServicioEmpresaId = null;
+    this.selectedServicioEmpresaNombre = null;
+    this.selectedServicioTipoEmpresaId = null;
 
     // ✅ Usa 'await' para esperar a que la lista de empresas se recargue
     await this.cargarEmpresas();
@@ -174,9 +212,10 @@ async cargarEmpresas(): Promise<void> {
   // servicios
   openServiciosModal(empresa: EmpresasInterfas): void {
     console.log("en el modal servicios")
-    this.selectedEmpresaId = empresa.id;
-    this.selectedEmpresaNombre = empresa.nombre;
-    this.selectedidTipoEmpresa =  empresa.tipoEmpresa.id;
+    this.selectedServicioEmpresaId = empresa.id;
+    this.selectedServicioEmpresaNombre = empresa.nombre;
+    this.selectedServicioTipoEmpresaId = empresa.id_tipo_empresa;
+
     this.showProductModalServicio = true;
   }
 
@@ -190,7 +229,20 @@ async cargarEmpresas(): Promise<void> {
   // ✅ New method to close the modal
   async onModalClosedServicios(): Promise<void> {
     this.showProductModalServicio = false;
+    this.modoAgregarColaborador = false;
     this.selectedEmpresaId = null;
+    this.selectedEmpresaNombre = null;
+
+    this.showProductModal = false;
+    this.selectedProductoEmpresaId = null;
+    this.selectedProductoEmpresaNombre = null;
+    this.selectedProductoTipoEmpresaId = null;
+
+    this.showProductModalServicio = false;
+    this.selectedServicioEmpresaId = null;
+    this.selectedServicioEmpresaNombre = null;
+    this.selectedServicioTipoEmpresaId = null;
+
 
     // ✅ Usa 'await' para esperar a que la lista de empresas se recargue
     await this.cargarEmpresas();

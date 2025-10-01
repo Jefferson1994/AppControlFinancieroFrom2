@@ -233,6 +233,12 @@ export interface TipoServicio {
   activo: number;
 }
 
+export interface ImagenServicio {
+  id: number;
+  url_imagen: string;
+  orden: number;
+}
+
 export interface Servicios {
   id: number;
   nombre: string;
@@ -247,10 +253,61 @@ export interface Servicios {
   porcentaje_comision_colaborador: number;
   activo: number;
   tipoServicio: TipoServicio; // <-- Aquí se anida la interfaz anterior
+  imagenes: ImagenServicio[];
+
 }
 export interface RespuestaServicios {
   mensaje: string;
   servicios: Servicios[]; // Un arreglo de la interfaz Producto
+}
+
+
+export interface UsuarioColaborador {
+  id: number;
+  nombre: string;
+  correo: string;
+  id_rol: number;
+  numero_telefono: string;
+  numero_identificacion: string;
+  creado_en: string; // Puede ser de tipo Date si lo conviertes después
+  activo: number;
+}
+
+// Interfaz para cada objeto 'colaborador' del array
+export interface ColaboradorEmpresa {
+  id: number;
+  id_usuario: number;
+  id_negocio: number;
+  porcentaje_ganancia: number;
+  codigo_punto_emision_movil: string;
+  activo: boolean;
+  vacaciones: boolean;
+  usuario: UsuarioColaborador; // <-- Aquí se anida la interfaz Usuario
+}
+
+// Interfaz para la respuesta completa de la API
+export interface RespuestaColaboradores {
+  mensaje: string;
+  colaboradores: ColaboradorEmpresa[]; // Un array de la interfaz Colaborador
+}
+
+
+export interface ColaboradorActualizado {
+  id: number;
+  id_usuario: number;
+  id_negocio: number;
+  porcentaje_ganancia: number;
+  codigo_punto_emision_movil: string;
+  activo: boolean;
+  vacaciones: boolean;
+}
+
+/**
+ * Representa la respuesta completa de la API al desvincular un colaborador.
+ */
+export interface RespuestaDesvincular {
+  mensaje: string;
+  empleado: ColaboradorActualizado; // Objeto del colaborador actualizado
 }
 
 

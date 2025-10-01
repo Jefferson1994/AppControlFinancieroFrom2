@@ -1,19 +1,19 @@
 import { Injectable, inject } from '@angular/core';
 import { UserApiRepository } from '../../../infrastructure/empresaServicios/empresa-api.services';
-import { EstadisticasInventario } from '../../models/empresa.models';
+import { EstadisticasInventario, RespuestaColaboradores } from '../../models/empresa.models';
 
 @Injectable({
   providedIn: 'root'
 })
-export class listarEstadisticasxEmpresaUseCase {
+export class listarColaboradorxEmpresaUseCase {
 
   constructor(private readonly repository: UserApiRepository) {}
 
-  async execute(idEmpresa: number): Promise<EstadisticasInventario> {
+  async execute(idEmpresa: number): Promise<RespuestaColaboradores> {
 
 
     try {
-      const respuesta = await this.repository.ListaEstadisticasXEmpresa(idEmpresa);
+      const respuesta = await this.repository.ListaTodosColaboradoresXEmpresa(idEmpresa);
       console.log("las estadisticas optenidas:", JSON.stringify(respuesta));
       return respuesta;
     } catch (error) {

@@ -7,13 +7,17 @@ import { EmpresasInterfas,CrearEmpresaDTO,CrearEmpresaResponse,
   EstadisticasInventario, RespuestaServicios,
   TipoProducto,
   TipoServicio,
-  TipoEmpresa} from '../../models/empresa.models';
+  TipoEmpresa,
+  RespuestaColaboradores,
+  RespuestaDesvincular} from '../../models/empresa.models';
 
 export interface empresaRepositorio {
   todasEmpresasXAdmin(idAdministrador: number,token: string): Promise<EmpresasInterfas[]>;
   CrearEmpresa(empresa: FormData): Promise<CrearEmpresaResponse>;
-  CrearProducto(producto: CrearProductoDTO): Promise<CrearProductoResponse>;
-  CrearServicio(producto: CrearServicioDTO): Promise<CrearServicioResponse>;
+  //CrearProducto(producto: CrearProductoDTO): Promise<CrearProductoResponse>;
+  CrearProducto(producto: FormData): Promise<CrearProductoResponse>
+  //CrearServicio(producto: CrearServicioDTO): Promise<CrearServicioResponse>;
+  CrearServicio(servicio: FormData): Promise<CrearServicioResponse> 
   AgregarColaborador(AgregarColaborador: AgregarColaboradorDTO): Promise<AgregarColaboradorResponse>;
   todasEmpresasXID(idEmpresa: number): Promise<EmpresasInterfas>;
   actualizarEmpresa(empresa: ActualizarrEmpresaDTO,idEmpresa:number): Promise<CrearEmpresaResponse>;
@@ -23,5 +27,9 @@ export interface empresaRepositorio {
   ListarTiposProductosXEmpresa(tipoEmpresa: number): Promise<TipoProducto[]>
   ListarTiposServiciosXEmpresa(tipoEmpresa: number): Promise<TipoServicio[]>
   ListarTiposEmpresa(): Promise<TipoEmpresa[]>
+  ListaTodosColaboradoresXEmpresa(idEmpresa: number): Promise<RespuestaColaboradores>
+  desvincularColaboradoresXEmpresa(idEmpresa: number,id_usuario: number): Promise<RespuestaDesvincular>
+  vacacionesColaboradoresXEmpresa(idEmpresa: number,id_usuario: number): Promise<RespuestaDesvincular>
+  IntegrarvacacionesColaboradoresXEmpresa(idEmpresa: number,id_usuario: number): Promise<RespuestaDesvincular>
 }
 

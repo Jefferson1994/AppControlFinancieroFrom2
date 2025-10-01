@@ -67,38 +67,53 @@ export class CrearProductoComponent implements OnInit {
   // Señal para manejar errores (buena práctica)
   error = signal<string | null>(null);
 
-   async onSubmit(form: NgForm): Promise<void> {
-    if (form.valid) {
+  
+  async onSubmit(form: NgForm): Promise<void> {
+    if (!form.valid) {
+      console.log('Formulario no válido. Por favor, revisa los campos.');
+      return;
+    }
+
+    if (!this.selectedFiles || this.selectedFiles.length === 0) {
+      this.alertService.showError('Debes subir al menos una imagen del producto.');
+      return;
+    }
+
+    try {
+      this.loading = true;
+      this.loadingService.show();
+
+      const formData = new FormData();
       const datosProducto = form.value;
 
-      // ✅ Crea el objeto DTO y asigna el id_negocio
-      const productoParaCrear: CrearProductoDTO = {
-        ...datosProducto,
-        id_negocio: this.idEmpresa,
-        precio_promocion: datosProducto.precio_promocion || null,
-        precio_descuento: datosProducto.precio_descuento || null,
-      };
+      formData.append('nombre', datosProducto.nombre);
+      formData.append('descripcion', datosProducto.descripcion || '');
+      formData.append('precio_venta', datosProducto.precio_venta.toString());
+      formData.append('precio_compra', datosProducto.precio_compra?.toString() || '0');
+      formData.append('precio_promocion', datosProducto.precio_promocion?.toString() || '0');
+      formData.append('precio_descuento', datosProducto.precio_descuento?.toString() || '0');
+      formData.append('stock_actual', datosProducto.stock_actual?.toString() || '0');
+      formData.append('id_negocio', this.idEmpresa!.toString());
+      formData.append('id_tipo_producto', datosProducto.id_tipo_producto.toString());
 
-      console.log("el producto para guardar",productoParaCrear )
+      // Adjuntar imágenes (hasta 3)
+      this.selectedFiles.slice(0, 3).forEach(file => formData.append('imagenes', file, file.name));
 
-      try {
-         this.loading = true;      // <-- Inicia la carga del componente
-        this.loadingService.show();
-        const respuesta = await this.crearProductoUseCase.execute(productoParaCrear);
-        console.log('Respuesta de la API:', respuesta);
-        this.alertService.showSuccess('Se creo exitosamente el producto');
-        this.closeModal();
-      } catch (error) {
-        console.error('Error al crear el producto:', error);
-        this.alertService.showError('Error al crear el producto:');
-      }finally {
-        this.loading = false;     // <-- Detiene la carga del componente
-        this.loadingService.hide(); // <-- Detiene la carga global
-      }
-    } else {
-      console.log('Formulario no válido. Por favor, revisa los campos.');
+      const respuesta = await this.crearProductoUseCase.execute(formData);
+
+      console.log('Producto creado:', respuesta);
+      this.alertService.showSuccess('Producto creado exitosamente.');
+      this.closeModal();
+
+    } catch (error) {
+      console.error('Error al crear el producto:', error);
+      this.alertService.showError('Error al crear el producto.');
+    } finally {
+      this.loading = false;
+      this.loadingService.hide();
     }
   }
+
 
   onCancel(): void {
     // ✅ Cierra el modal al cancelar

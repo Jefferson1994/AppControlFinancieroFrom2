@@ -21,7 +21,8 @@
 
     <div class="content-box">
         <header class="header">
-            <h1>Inventario de Productos</h1>
+            <h1>Inventario de Productos </h1>
+            <span *ngIf="selectedEmpresaNombre1"> - {{ selectedEmpresaNombre1 }}</span>
             <button class="btn-primary"  (click)="empresa ? openProductModal(empresa) : null">Añadir Producto</button>
         </header>
 
@@ -61,9 +62,10 @@
     </div>
 
     <app-crear-producto
-    *ngIf="showProductModal && selectedEmpresaId && selectedEmpresaNombre"
+    *ngIf="showProductModal && selectedEmpresaId && selectedEmpresaNombre && idTipoEmpresa"
     [idEmpresa]="selectedEmpresaId"
     [nombreEmpresa]="selectedEmpresaNombre"
+    [idTipoEmpresa]="idTipoEmpresa"
     (modalClosed)="onModalClosed()">
   </app-crear-producto>
 

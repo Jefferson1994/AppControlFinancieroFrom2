@@ -71,27 +71,53 @@ export class CrearServicioComponent implements OnInit {
   }
 
   async onSubmit(form: NgForm): Promise<void> {
-    if (form.valid) {
-      const datosServicio = this.servicio();
-
-      try {
-        this.loading = true;      // <-- Inicia la carga del componente
-        this.loadingService.show(); // <-- Inicia la carga global
-        const respuesta = await this.crearServicioUseCase.execute(datosServicio); // ✅ Llama al caso de uso
-        console.log('Servicio creado:', respuesta);
-        this.alertService.showSuccess('Servicio creado con exito.');
-        this.closeModal();
-      } catch (error) {
-        console.error('Error al crear el servicio:', error);
-        this.alertService.showError('No se pudo crear el servicio.');
-      }finally{
-        this.loading = false;     // <-- Detiene la carga del componente
-        this.loadingService.hide()
-      }
-    } else {
+    if (!form.valid) {
       console.log('Formulario no válido. Por favor, revisa los campos.');
+      return;
+    }
+
+    if (!this.selectedFiles || this.selectedFiles.length === 0) {
+      this.alertService.showError('Debes subir al menos una imagen del servicio.');
+      return;
+    }
+
+    try {
+      this.loading = true;
+      this.loadingService.show();
+
+      const formData = new FormData();
+      const datosServicio = form.value;
+
+      // Campos del servicio
+      formData.append('nombre', datosServicio.nombre);
+      formData.append('descripcion', datosServicio.descripcion || '');
+      formData.append('precio', datosServicio.precio.toString());
+      formData.append('precio_descuento', datosServicio.precio_descuento?.toString() || '0');
+      formData.append('porcentaje_descuento', datosServicio.porcentaje_descuento?.toString() || '0');
+      formData.append('porcentaje_comision_colaborador', datosServicio.porcentaje_comision_colaborador?.toString() || '0');
+      formData.append('activo', datosServicio.activo?.toString() || '1');
+      formData.append('id_negocio', this.idEmpresa!.toString());
+      formData.append('id_tipo_servicio', datosServicio.id_tipo_servicio.toString());
+      formData.append('duracion_minutos', datosServicio.duracion_minutos.toString());
+
+      // Adjuntar imágenes (hasta 3)
+      this.selectedFiles.slice(0, 3).forEach(file => formData.append('imagenes', file, file.name));
+
+      const respuesta = await this.crearServicioUseCase.execute(formData);
+
+      console.log('Servicio creado:', respuesta);
+      this.alertService.showSuccess('Servicio creado exitosamente.');
+      this.closeModal();
+
+    } catch (error) {
+      console.error('Error al crear el servicio:', error);
+      this.alertService.showError('Error al crear el servicio.');
+    } finally {
+      this.loading = false;
+      this.loadingService.hide();
     }
   }
+
 
   onCancel(): void {
     this.closeModal();

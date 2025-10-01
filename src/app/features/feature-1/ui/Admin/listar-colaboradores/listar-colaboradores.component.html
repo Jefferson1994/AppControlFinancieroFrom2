@@ -15,31 +15,70 @@
                     <th>Nombre</th>
                     <th>Rol</th>
                     <th>Email</th>
+                    <th>Celular</th>
+                    <th>CI</th>
                     <th>Estado</th>
+                    <th>Vacaciones</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                @for (colaborador of colaboradores; track colaborador.email) {
-                  <tr>
-                      <td>{{ colaborador.nombre }}</td>
-                      <td>{{ colaborador.rol }}</td>
-                      <td>{{ colaborador.email }}</td>
-                      <td>
-                          <span class="status-badge {{ colaborador.statusClass }}">
-                              {{ colaborador.status }}
-                          </span>
-                      </td>
-                      <td class="action-buttons">
-                           <div class="action-buttons">
-                                <a href="#">Ver</a>
-                                <a href="#">Desvincular</a>
-                                <a href="#">Activar</a>
-                                <a href="#">Estadisticas</a>
-                            </div>
-                          
-                      </td>
-                  </tr>
+                @for (colaborador of colaboradores; track colaborador.id) {
+                    <tr>
+                    <td>{{ colaborador.usuario.nombre }}</td>
+                    
+                    <td>Rol ID: {{ colaborador.usuario.id_rol }}</td>
+                    
+                    <td>{{ colaborador.usuario.correo }}</td>
+                    <td>{{ colaborador.usuario.numero_telefono }}</td>
+                    <td>{{ colaborador.usuario.numero_identificacion }}</td>
+                    
+                    <td>
+                        <span class="status-badge" 
+                            [ngClass]="{ 'status-active': colaborador.activo, 'status-inactive': !colaborador.activo }">
+                        {{ colaborador.activo ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge" 
+                            [ngClass]="{ 'status-active': colaborador.vacaciones, 'status-inactive': !colaborador.vacaciones }">
+                        {{ colaborador.vacaciones ? 'Si' : 'No' }}
+                        </span>
+                    </td>
+                    <td class="action-buttons">
+                        <div class="action-buttons">
+                            
+                            @if (colaborador.activo) {
+                                <button (click)="onDesvincular(colaborador)" class="btn-action btn-danger">
+                                    Desvincular
+                                </button>
+                            } @else {
+                            <a href="#">Activar</a>
+                            }
+
+                            @if (colaborador.activo) {
+                            @if (colaborador.vacaciones) {
+                                <button (click)="integrarVacaciones(colaborador)" class="btn-action btn-danger">
+                                    Reintegra vacaciones
+                                </button>
+                            } @else {
+                                <button (click)="onVacaciones(colaborador)" class="btn-action btn-danger">
+                                    Enviar a vacaciones
+                                </button>
+                            }
+                            }
+
+                            <a href="#">Estadísticas</a>
+
+                        </div>
+                        </td>
+                    
+                  
+                    </tr>
+                } @empty {
+                    <tr>
+                    <td colspan="5" style="text-align: center;">No se encontraron colaboradores.</td>
+                    </tr>
                 }
             </tbody>
         </table>

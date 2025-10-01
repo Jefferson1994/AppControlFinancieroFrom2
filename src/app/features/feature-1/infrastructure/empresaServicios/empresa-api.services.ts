@@ -9,7 +9,9 @@ import { CrearEmpresaDTO,CrearEmpresaResponse, EmpresasInterfas
   EstadisticasInventario,RespuestaServicios,
   TipoProducto,
   TipoServicio,
-  TipoEmpresa
+  TipoEmpresa,
+  RespuestaColaboradores,
+  RespuestaDesvincular
 } from '../../domain/models/empresa.models'; // Asegúrate de que los paths sean correctos
 import { empresaRepositorio } from '../../domain/repositories/empresaRepositories/empresa.repository'; // El contrato del repositorio
 
@@ -62,18 +64,18 @@ export class UserApiRepository implements empresaRepositorio {
       throw error;
     }
   }
-  async CrearProducto(producto: CrearProductoDTO): Promise<CrearProductoResponse> {
+  async CrearProducto(producto: FormData): Promise<CrearProductoResponse> {
     const url = `${this.baseUrl}productos/crear`;
     //const body = { CrearEmpresaDTO };
 
     try {
-      // La API devuelve un objeto con la propiedad 'empresas', que es un array.
-      // Tipamos la respuesta para acceder a ese array.
+
       const response = await lastValueFrom(
         //this.http.post<{ empresas: EmpresasInterfas[] }>(url, body)
         this.http.post<{ producto: CrearProductoResponse }>(url, producto)
       );
 
+     
       return response.producto;
     } catch (error) {
       // El repositorio solo relanza el error. La lógica de manejo
@@ -82,22 +84,21 @@ export class UserApiRepository implements empresaRepositorio {
     }
   }
 
-  async CrearServicio(servicio: CrearServicioDTO): Promise<CrearServicioResponse> {
+  async CrearServicio(servicio: FormData): Promise<CrearServicioResponse> {
     const url = `${this.baseUrl}servicio/crear`;
     //const body = { CrearEmpresaDTO };
 
     try {
-      // La API devuelve un objeto con la propiedad 'empresas', que es un array.
-      // Tipamos la respuesta para acceder a ese array.
+      
       const response = await lastValueFrom(
         //this.http.post<{ empresas: EmpresasInterfas[] }>(url, body)
         this.http.post<{ servicio: CrearServicioResponse }>(url, servicio)
       );
 
+     ;
       return response.servicio;
     } catch (error) {
-      // El repositorio solo relanza el error. La lógica de manejo
-      // específica va en el caso de uso o el componente.
+
       throw error;
     }
   }
@@ -116,13 +117,13 @@ export class UserApiRepository implements empresaRepositorio {
       return response.empleado;
     } catch (error) {
       // El repositorio solo relanza el error. La lógica de manejo
-      // específica va en el caso de uso o el componente.
+      console.error(error)
       throw error;
     }
   }
 
   async todasEmpresasXID(idEmpresa: number): Promise<EmpresasInterfas> {
-    const url = `${this.baseUrl}empresa/todasEmpresasXAdmin`;
+    const url = `${this.baseUrl}empresa/empresasXId`;
     console.log('en el api todas las empresa')
     const body = { idEmpresa: idEmpresa };
 
@@ -131,10 +132,10 @@ export class UserApiRepository implements empresaRepositorio {
       // Tipamos la respuesta para acceder a ese array.
       const response = await lastValueFrom(
         //this.http.post<{ empresas: EmpresasInterfas[] }>(url, body)
-        this.http.post<{ empresas: EmpresasInterfas }>(url, body)
+        this.http.post<{ empresa: EmpresasInterfas }>(url, body)
       );
 
-      return response.empresas;
+      return response.empresa;
     } catch (error) {
       // El repositorio solo relanza el error. La lógica de manejo
       // específica va en el caso de uso o el componente.
@@ -264,6 +265,79 @@ export class UserApiRepository implements empresaRepositorio {
     } catch (error) {
 
       console.error('Error en la llamada API listar todos los tipos de empresa:', error);
+      throw error;
+    }
+  }
+
+
+  async ListaTodosColaboradoresXEmpresa(idEmpresa: number): Promise<RespuestaColaboradores> {
+    const url = `${this.baseUrl}empresa/listarColaboradorXEmpresa`;
+    const body = { id_negocio: idEmpresa };
+
+    try {
+      const response = await lastValueFrom(
+        this.http.post<RespuestaColaboradores>(url, body)
+      );
+
+      return response;
+
+    } catch (error) {
+
+      console.error('Error en la llamada API ListaServiciosXEmpresa:', error);
+      throw error;
+    }
+  }
+
+  async desvincularColaboradoresXEmpresa(idEmpresa: number,id_usuario: number): Promise<RespuestaDesvincular> {
+    const url = `${this.baseUrl}empresa/desvincularColaborador`;
+    const body = { id_negocio: idEmpresa,id_usuario:id_usuario };
+
+    try {
+      const response = await lastValueFrom(
+        this.http.post<RespuestaDesvincular>(url, body)
+      );
+
+      return response;
+
+    } catch (error) {
+
+      console.error('Error en la llamada API ListaServiciosXEmpresa:', error);
+      throw error;
+    }
+  }
+
+  async vacacionesColaboradoresXEmpresa(idEmpresa: number,id_usuario: number): Promise<RespuestaDesvincular> {
+    const url = `${this.baseUrl}empresa/vacacionesColaborador`;
+    const body = { id_negocio: idEmpresa,id_usuario:id_usuario };
+
+    try {
+      const response = await lastValueFrom(
+        this.http.post<RespuestaDesvincular>(url, body)
+      );
+
+      return response;
+
+    } catch (error) {
+
+      console.error('Error en la llamada API ListaServiciosXEmpresa:', error);
+      throw error;
+    }
+  }
+
+  async IntegrarvacacionesColaboradoresXEmpresa(idEmpresa: number,id_usuario: number): Promise<RespuestaDesvincular> {
+    const url = `${this.baseUrl}empresa/IntegrarvacacionesColaborador`;
+    const body = { id_negocio: idEmpresa,id_usuario:id_usuario };
+
+    try {
+      const response = await lastValueFrom(
+        this.http.post<RespuestaDesvincular>(url, body)
+      );
+
+      return response;
+
+    } catch (error) {
+
+      console.error('Error en la llamada API ListaServiciosXEmpresa:', error);
       throw error;
     }
   }

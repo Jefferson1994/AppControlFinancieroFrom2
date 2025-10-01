@@ -76,17 +76,17 @@
   </div>
 
   <app-crear-producto
-    *ngIf="showProductModal && selectedEmpresaId && selectedEmpresaNombre && selectedidTipoEmpresa"
-    [idEmpresa]="selectedEmpresaId"
-    [nombreEmpresa]="selectedEmpresaNombre"
-    [idTipoEmpresa]="selectedidTipoEmpresa"
+    *ngIf="showProductModal && selectedProductoEmpresaId && selectedProductoEmpresaNombre && selectedProductoTipoEmpresaId"
+    [idEmpresa]="selectedProductoEmpresaId"
+    [nombreEmpresa]="selectedProductoEmpresaNombre"
+    [idTipoEmpresa]="selectedProductoTipoEmpresaId"
     (modalClosed)="onModalClosed()">
   </app-crear-producto>
   <app-crear-servicio
-  *ngIf="showProductModalServicio && selectedEmpresaId && selectedEmpresaNombre && selectedidTipoEmpresa"
-    [idEmpresa]="selectedEmpresaId"
-    [nombreEmpresa]="selectedEmpresaNombre"
-    [idTipoEmpresa]="selectedidTipoEmpresa"
+  *ngIf="showProductModalServicio && selectedServicioEmpresaId && selectedServicioEmpresaNombre && selectedServicioTipoEmpresaId"
+    [idEmpresa]="selectedServicioEmpresaId"
+    [nombreEmpresa]="selectedServicioEmpresaNombre"
+    [idTipoEmpresa]="selectedServicioTipoEmpresaId"
     (modalClosed)="onModalClosed()">
 
   </app-crear-servicio>

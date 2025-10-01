@@ -25,6 +25,7 @@ export class ListarServiciosComponent implements OnInit {
   private route = inject(ActivatedRoute);
   selectedEmpresaId: number | null = null;
   selectedEmpresaNombre: string | null = null;
+  idTipoEmpresa: number | null = null;
   servicios: Servicios[] = [];
   serviciosFiltrados: Servicios[] = [];
   terminoBusqueda: string = '';
@@ -157,6 +158,7 @@ export class ListarServiciosComponent implements OnInit {
     console.log("en el modal servicios",empresa)
     this.selectedEmpresaId = empresa.id;
     this.selectedEmpresaNombre = empresa.nombre;
+    this.idTipoEmpresa=empresa.tipoEmpresa.id
     this.showProductModalServicio = true;
   }
 

@@ -29,7 +29,7 @@
 
               <div *ngIf="servicio.id" class="card-image-container">
                   <!--<img [src]="servicio.id | safeUrl" [alt]="servicio.nombre" class="service-card-image">-->
-                  <img src="https://media.gettyimages.com/id/1582664831/es/foto/el-motociclista-con-equipo-de-seguridad-completo-disfruta-del-paseo-por-la-carretera-rural.jpg?s=170667a&w=gi&k=20&c=iGwN6Nlz3gowsRVeWCVG4BknHymzFOXcsQz4r7hpDg0=" alt="{{ servicio.nombre }}" class="service-card-image">
+                  <img [src]="servicio.imagenes[0].url_imagen" [alt]="servicio.nombre" class="service-card-image">
               </div>
 
               <div class="service-card-content">
@@ -58,6 +58,7 @@
         *ngIf="showProductModalServicio && selectedEmpresaId && selectedEmpresaNombre"
         [idEmpresa]="selectedEmpresaId"
         [nombreEmpresa]="selectedEmpresaNombre"
+        [idTipoEmpresa]="idTipoEmpresa"
         (modalClosed)="onModalClosed()">
     </app-crear-servicio>
 </div>

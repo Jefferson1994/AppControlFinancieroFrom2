@@ -19,7 +19,7 @@ export class listarProductoxEmpresaUseCase {
     } catch (error) {
       console.error('Error en el caso de uso al obtener empresas:', error);
       // Lanza un error más descriptivo que pueda ser manejado por el componente.
-      throw new Error('No se pudieron obtener las empresas. Inténtalo de nuevo más tarde.');
+      throw error; 
     }
   }
 }

@@ -8,6 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 import { AgregarColaboradorDTO } from '../../../domain/models/empresa.models';
 import { LoadingService } from '../../../services/loading.service';
 import { AlertService } from '../../../services/alert.service';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-agregar-colaborador',
   standalone: true,
@@ -115,11 +116,27 @@ export class AgregarColaboradorComponent implements OnInit {
 
     try {
       // ✅ Se llama al caso de uso para enviar la data
+      this.loading = true;      // <-- Inicia la carga del componente
+      this.loadingService.show();
       const respuesta = await this.agregarColaboradorServicesUseCase.execute(datosParaAPI);
       console.log('Colaborador agregado exitosamente:', respuesta);
       this.closeModal();
     } catch (error) {
-      console.error('Error al agregar el colaborador:', error);
+      if (error instanceof HttpErrorResponse && error.status === 400) {
+      // 1. Extrae el mensaje específico del backend.
+        const mensajeDelBackend = error.error.mensaje;
+        
+        // 2. Muestra ese mensaje al usuario.
+        this.alertService.showError(mensajeDelBackend);
+
+      } else {
+        // Manejo para cualquier otro tipo de error.
+        this.alertService.showError('Ocurrió un error inesperado. Inténtelo de nuevo.');
+        console.error('Error no controlado:', error);
+      }
+    }finally{
+      this.loading = false;
+      this.loadingService.hide();
     }
   }
 

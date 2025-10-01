@@ -27,6 +27,10 @@ export class ListarProductosComponent implements OnInit {
 
   selectedEmpresaId: number | null = null;
   selectedEmpresaNombre: string | null = null;
+  idTipoEmpresa: number | null = null;
+  selectedEmpresaNombre1: string | null = null;
+
+
 
   empresas: EmpresasInterfas[] = [];
   empresa: EmpresasInterfas | null = null;
@@ -61,9 +65,11 @@ async ngOnInit(): Promise<void> {
         this.loading = true;      // <-- Inicia la carga del componente
         this.loadingService.show(); // <-- Inicia la carga global
         this.selectedEmpresaId = Number(idEmpresaStr);
+        console.log('el id de la empresa el listar productos', this.selectedEmpresaId)
         await this.cargarProductos(this.selectedEmpresaId);
         await this.cargarEstadisticas(this.selectedEmpresaId);
         await this.cargarDatosEmpresa(this.selectedEmpresaId);
+        
 
       }catch(error){
         console.error("Error al cargar los productosss:", error);
@@ -120,13 +126,11 @@ async ngOnInit(): Promise<void> {
         const idAdministrador = userResponse.user.id;
 
         const response = await this.obtenerEmpresasUseCase.execute(idEmpresa);
-        if (Array.isArray(response)) {
-          this.empresa = response[0]
-        } else {
-          this.empresa = response;
-        }
+        
+        this.empresa = response
+        
         console.log('Empresa cargada y asignada:', JSON.stringify(this.empresa));
-
+        this.selectedEmpresaNombre1 = this.empresa?.nombre || '';
 
       } else {
         console.error('User not logged in or ID not found.');
@@ -140,9 +144,10 @@ async ngOnInit(): Promise<void> {
   }
 
   openProductModal(empresa: EmpresasInterfas): void {
-        console.log('la empresa en crear ',empresa)
+    console.log('la empresa en crear ',empresa)
     this.selectedEmpresaId = empresa.id;
     this.selectedEmpresaNombre = empresa.nombre;
+    this.idTipoEmpresa=empresa.tipoEmpresa.id
     this.showProductModal = true;
   }
 
