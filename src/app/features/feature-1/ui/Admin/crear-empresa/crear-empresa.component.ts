@@ -1,13 +1,15 @@
-import { Component, ChangeDetectionStrategy, signal, ViewChild, ElementRef,ChangeDetectorRef, inject  } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, ViewChild, ElementRef,ChangeDetectorRef, inject, OnInit  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { CrearEmpresaDTO, CrearEmpresaResponse } from '../../../domain/models/empresa.models';
+import { CrearEmpresaDTO, CrearEmpresaResponse, TipoEmpresa } from '../../../domain/models/empresa.models';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { crearEmpresasUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/crearEmpresa.use.case';
 import { ComponentMapaRegistroComponent } from "../component-mapa-registro/component-mapa-registro.component";
 import { AlertService } from '../../../services/alert.service';
 import { LoadingService } from '../../../services/loading.service';
+import { listarTiposEmpresaUseCase } from '../../../../feature-1/domain/use-cases/empresa-caseEmpresa/listarTiposEmpresa.use.case';
+
 
 @Component({
   selector: 'app-crear-empresa',
@@ -17,7 +19,7 @@ import { LoadingService } from '../../../services/loading.service';
   styleUrls: ['./crear-empresa.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CrearEmpresaComponent {
+export class CrearEmpresaComponent  implements OnInit {
 
   selectedLocation: {
     lat: number;
@@ -37,6 +39,8 @@ export class CrearEmpresaComponent {
     direccionFisica: 'N/A'
   };
 
+  tiposDeEmpresa: TipoEmpresa[] = [];
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   // (NUEVO) Almacena los archivos de imagen seleccionados (los objetos File)
@@ -53,8 +57,13 @@ export class CrearEmpresaComponent {
     private crearEmpresasUseCase: crearEmpresasUseCase,
     private authService: AuthService,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private listarTiposEmpresa: listarTiposEmpresaUseCase
   ) {}
+
+  ngOnInit(): void {
+    this.cargarTiposDeEmpresa();
+  }
 
   currentStep = signal<number>(1);
 
@@ -219,5 +228,22 @@ export class CrearEmpresaComponent {
   removeImage(index: number): void {
     this.selectedFiles.splice(index, 1);
     this.imagePreviews.splice(index, 1);
+  }
+
+  async cargarTiposDeEmpresa(): Promise<void> {
+    try {
+      this.loading = true;      // <-- Inicia la carga del componente
+      this.loadingService.show();
+      this.tiposDeEmpresa = await this.listarTiposEmpresa.execute();
+      console.log('Tipos de empresa cargados:', this.tiposDeEmpresa);
+      this.cd.markForCheck();
+    } catch (error) {
+      console.error('Error al cargar los tipos de empresa:', error);
+      this.alertService.showError('Error al cargar los tipos de empresa.');
+      // Aquí podrías mostrar una alerta al usuario
+    }finally{
+        this.loading = false;     // <-- Detiene la carga del componente
+        this.loadingService.hide()
+    }
   }
 }

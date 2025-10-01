@@ -23,11 +23,12 @@ export class CrearServicioComponent implements OnInit {
 
   @Input() idEmpresa: number | undefined;
   @Input() nombreEmpresa: string | undefined;
+  @Input() idTipoEmpresa: number | undefined | null;
 
   @Output() modalClosed = new EventEmitter<void>();
   private alertService = inject(AlertService);
   private loadingService = inject(LoadingService);
-  
+
   loading = true;
 
   servicio = signal<any>({
@@ -48,7 +49,7 @@ export class CrearServicioComponent implements OnInit {
   imagenes!: string[];
 
   tiposDeServicio = signal<TipoServicio[]>([]);
-    
+
     // Señal para manejar errores (buena práctica)
   error = signal<string | null>(null);
 
@@ -65,7 +66,7 @@ export class CrearServicioComponent implements OnInit {
     if (this.idEmpresa) {
       this.servicio.update(serv => ({ ...serv, id_negocio: this.idEmpresa }));
       console.log('Creando servicio para la empresa:', this.nombreEmpresa, 'con ID:', this.idEmpresa);
-      this.cargarTiposDeServicios();
+      this.cargarTiposDeServicios(this.idTipoEmpresa ||  0);
     }
   }
 
@@ -100,7 +101,7 @@ export class CrearServicioComponent implements OnInit {
     this.modalClosed.emit();
   }
 
-  //manejar imagenes 
+  //manejar imagenes
   onDragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
@@ -157,10 +158,11 @@ export class CrearServicioComponent implements OnInit {
     this.imagePreviews.splice(index, 1);
   }
 
-  async cargarTiposDeServicios(): Promise<void> {
+  async cargarTiposDeServicios(idEmpresa: number): Promise<void> {
     try {
+      this.loading = true;      // <-- Inicia la carga del componente
+      this.loadingService.show();
 
-      const idEmpresa = 1; 
       const respuesta = await this.listaTiposServicio.execute(idEmpresa);
       console.log('la respuesta de los tipos de servicios',JSON.stringify(respuesta))
       this.tiposDeServicio.set(respuesta);
@@ -169,6 +171,9 @@ export class CrearServicioComponent implements OnInit {
       // Si ocurre un error, lo guardamos para mostrarlo en el HTML
       this.error.set('No se pudieron cargar los tipos de producto.');
       console.error(err);
+    }finally{
+        this.loading = false;     // <-- Detiene la carga del componente
+        this.loadingService.hide()
     }
   }
 }

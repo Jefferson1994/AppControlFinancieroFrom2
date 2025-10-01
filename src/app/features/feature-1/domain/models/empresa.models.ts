@@ -40,6 +40,7 @@ export interface TipoEmpresa {
   nombre: string;
   descripcion: string;
   activo: number;
+  clasificacion: string;
 }
 
 export interface CrearEmpresaDTO {

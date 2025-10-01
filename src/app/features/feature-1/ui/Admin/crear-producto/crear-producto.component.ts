@@ -23,6 +23,7 @@ export class CrearProductoComponent implements OnInit {
 
   @Input() idEmpresa: number | undefined;
   @Input() nombreEmpresa: string | undefined;
+  @Input() idTipoEmpresa: number | undefined | null;
 
   @Output() modalClosed = new EventEmitter<void>();
   private alertService = inject(AlertService);
@@ -56,13 +57,13 @@ export class CrearProductoComponent implements OnInit {
   ngOnInit(): void {
     if (this.idEmpresa) {
       this.producto.update(prod => ({ ...prod, id_negocio: this.idEmpresa }));
-      console.log('Creando producto para la empresa con ID:', this.idEmpresa , 'Y EL NOMBRE' , this.nombreEmpresa);
-      this.cargarTiposDeProducto();
+      console.log('Creando producto para la empresa con ID:', this.idEmpresa , 'Y EL NOMBRE' , this.nombreEmpresa, 'y el tipo de empresa ', this.idTipoEmpresa);
+      this.cargarTiposDeProducto(this.idTipoEmpresa ||  0);
     }
   }
 
   tiposDeProducto = signal<TipoProducto[]>([]);
-  
+
   // Señal para manejar errores (buena práctica)
   error = signal<string | null>(null);
 
@@ -166,11 +167,10 @@ export class CrearProductoComponent implements OnInit {
     this.imagePreviews.splice(index, 1);
   }
 
-  async cargarTiposDeProducto(): Promise<void> {
+  async cargarTiposDeProducto(idEmpresa: number): Promise<void> {
     try {
-      // Asumimos que tienes el id de la empresa.
-      // Podría venir de un @Input(), de una ruta, etc.
-      const idEmpresa = 1; // <-- REEMPLAZA ESTO con el ID real de la empresa
+      this.loading = true;      // <-- Inicia la carga del componente
+      this.loadingService.show();
 
       const respuesta = await this.listarTiposUseCase.execute(idEmpresa);
       console.log('la respuesta de los tipos de productos',JSON.stringify(respuesta))
@@ -181,6 +181,9 @@ export class CrearProductoComponent implements OnInit {
       // Si ocurre un error, lo guardamos para mostrarlo en el HTML
       this.error.set('No se pudieron cargar los tipos de producto.');
       console.error(err);
+    }finally{
+        this.loading = false;     // <-- Detiene la carga del componente
+        this.loadingService.hide()
     }
   }
 

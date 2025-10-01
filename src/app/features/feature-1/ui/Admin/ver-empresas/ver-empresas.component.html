@@ -35,12 +35,12 @@
 
         <button class="btn btn-secondary"
                 (click)="openProductModal(empresa)"
-                *ngIf="modoSeleccionProducto">
+                *ngIf="modoSeleccionProducto && (empresa.tipoEmpresa.clasificacion === 'PRODUCTOS' || empresa.tipoEmpresa.clasificacion === 'AMBOS')">
           Crear Producto
         </button>
         <button class="btn btn-secondary"
                 (click)="openServiciosModal(empresa)"
-                *ngIf="modoSeleccionServices">
+                *ngIf="modoSeleccionServices  && (empresa.tipoEmpresa.clasificacion === 'SERVICIOS' || empresa.tipoEmpresa.clasificacion === 'AMBOS')">
           Crear Servicio
         </button>
         <button class="btn btn-secondary"
@@ -76,15 +76,17 @@
   </div>
 
   <app-crear-producto
-    *ngIf="showProductModal && selectedEmpresaId && selectedEmpresaNombre"
+    *ngIf="showProductModal && selectedEmpresaId && selectedEmpresaNombre && selectedidTipoEmpresa"
     [idEmpresa]="selectedEmpresaId"
     [nombreEmpresa]="selectedEmpresaNombre"
+    [idTipoEmpresa]="selectedidTipoEmpresa"
     (modalClosed)="onModalClosed()">
   </app-crear-producto>
   <app-crear-servicio
-  *ngIf="showProductModalServicio && selectedEmpresaId && selectedEmpresaNombre"
+  *ngIf="showProductModalServicio && selectedEmpresaId && selectedEmpresaNombre && selectedidTipoEmpresa"
     [idEmpresa]="selectedEmpresaId"
     [nombreEmpresa]="selectedEmpresaNombre"
+    [idTipoEmpresa]="selectedidTipoEmpresa"
     (modalClosed)="onModalClosed()">
 
   </app-crear-servicio>

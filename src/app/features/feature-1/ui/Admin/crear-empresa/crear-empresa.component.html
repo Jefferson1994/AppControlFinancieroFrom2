@@ -30,8 +30,13 @@
         <div class="form-group">
           <label for="tipoEmpresa">Tipo de Empresa</label>
           <select id="tipoEmpresa" name="id_tipo_empresa" ngModel required>
-            <option value="1">Barbería</option>
-            <option value="2">Salón de Belleza</option>
+
+            <option [ngValue]="null" disabled>Selecciona un tipo de empresa</option>
+
+            @for (tipo of tiposDeEmpresa; track tipo.id) {
+              <option [value]="tipo.id">{{ tipo.nombre }}</option>
+            }
+
           </select>
         </div>
         <div class="form-group">

@@ -37,6 +37,7 @@ export class VerEmpresasComponent implements OnInit {
   showProductModalServicio = false;
   selectedEmpresaId: number | null = null;
   selectedEmpresaNombre: string | null = null;
+  selectedidTipoEmpresa: number | null = null;
 
 
 
@@ -45,40 +46,40 @@ export class VerEmpresasComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-  try {
+    try {
 
 
-    await this.cargarEmpresas(); // espera a que termine
+      await this.cargarEmpresas(); // espera a que termine
 
-    this.activatedRoute.url.subscribe({
-      next: url => {
-        this.modoSeleccionProducto = url[0]?.path === 'seleccionarEmpresaProducto';
-        this.modoSeleccionServices = url[0]?.path === 'seleccionarEmpresaServicio';
-        this.modoAgregarColaborador = url[0]?.path === 'seleccionarEmpresaColaborador';
-        this.modoVerColaboradores= url[0]?.path === 'listarColaboradorEmpresa';
-        this.modoListaProductosEmpresa = url[0]?.path === 'listarProductoEmpresa';
-        this.modoListaServiciosEmpresa= url[0]?.path === 'listarServicioEmpresa';
+      this.activatedRoute.url.subscribe({
+        next: url => {
+          this.modoSeleccionProducto = url[0]?.path === 'seleccionarEmpresaProducto';
+          this.modoSeleccionServices = url[0]?.path === 'seleccionarEmpresaServicio';
+          this.modoAgregarColaborador = url[0]?.path === 'seleccionarEmpresaColaborador';
+          this.modoVerColaboradores= url[0]?.path === 'listarColaboradorEmpresa';
+          this.modoListaProductosEmpresa = url[0]?.path === 'listarProductoEmpresa';
+          this.modoListaServiciosEmpresa= url[0]?.path === 'listarServicioEmpresa';
 
 
-        if (this.modoSeleccionServices || this.modoSeleccionProducto
-          || this.modoAgregarColaborador|| this.modoVerColaboradores||
-          this.modoListaProductosEmpresa || this.modoListaServiciosEmpresa) {
-          this.crearEmpresa = false;
+          if (this.modoSeleccionServices || this.modoSeleccionProducto
+            || this.modoAgregarColaborador|| this.modoVerColaboradores||
+            this.modoListaProductosEmpresa || this.modoListaServiciosEmpresa) {
+            this.crearEmpresa = false;
+          }
+        },
+        error: err => {
+          console.error('Error en la suscripción de la URL:', err);
+          this.alertService.showError('Error al leer la URL.');
         }
-      },
-      error: err => {
-        console.error('Error en la suscripción de la URL:', err);
-        this.alertService.showError('Error al leer la URL.');
-      }
-    });
+      });
 
-  } catch (error) {
-    console.error('Error en ngOnInit:', error);
-    this.alertService.showError('Ocurrió un error al inicializar la pantalla.');
-  } finally {
-    this.loadingService.hide();
+    } catch (error) {
+      console.error('Error en ngOnInit:', error);
+      this.alertService.showError('Ocurrió un error al inicializar la pantalla.');
+    } finally {
+      this.loadingService.hide();
+    }
   }
-}
 
 
 
@@ -128,6 +129,8 @@ async cargarEmpresas(): Promise<void> {
   openProductModal(empresa: EmpresasInterfas): void {
     this.selectedEmpresaId = empresa.id;
     this.selectedEmpresaNombre = empresa.nombre;
+    console.log("el id del tipo de empresa es ", empresa.tipoEmpresa.id)
+    this.selectedidTipoEmpresa =  empresa.tipoEmpresa.id;
     this.showProductModal = true;
   }
 
@@ -156,7 +159,6 @@ async cargarEmpresas(): Promise<void> {
   async onModalClosed(): Promise<void> {
     this.showProductModal = false;
     this.selectedEmpresaId = null;
-
     // ✅ Usa 'await' para esperar a que la lista de empresas se recargue
     await this.cargarEmpresas();
   }
@@ -174,6 +176,7 @@ async cargarEmpresas(): Promise<void> {
     console.log("en el modal servicios")
     this.selectedEmpresaId = empresa.id;
     this.selectedEmpresaNombre = empresa.nombre;
+    this.selectedidTipoEmpresa =  empresa.tipoEmpresa.id;
     this.showProductModalServicio = true;
   }
 

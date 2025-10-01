@@ -8,7 +8,8 @@ import { CrearEmpresaDTO,CrearEmpresaResponse, EmpresasInterfas
   ActualizarrEmpresaDTO, RespuestaProductos,
   EstadisticasInventario,RespuestaServicios,
   TipoProducto,
-  TipoServicio
+  TipoServicio,
+  TipoEmpresa
 } from '../../domain/models/empresa.models'; // Asegúrate de que los paths sean correctos
 import { empresaRepositorio } from '../../domain/repositories/empresaRepositories/empresa.repository'; // El contrato del repositorio
 
@@ -246,6 +247,23 @@ export class UserApiRepository implements empresaRepositorio {
     } catch (error) {
 
       console.error('Error en la llamada API ListaServiciosXEmpresa:', error);
+      throw error;
+    }
+  }
+
+  async ListarTiposEmpresa(): Promise<TipoEmpresa[]> {
+    const url = `${this.baseUrl}empresa/tiposempresa`;
+
+    try {
+      const response = await lastValueFrom(
+        this.http.post<TipoEmpresa[]>(url, '')
+      );
+
+      return response;
+
+    } catch (error) {
+
+      console.error('Error en la llamada API listar todos los tipos de empresa:', error);
       throw error;
     }
   }
