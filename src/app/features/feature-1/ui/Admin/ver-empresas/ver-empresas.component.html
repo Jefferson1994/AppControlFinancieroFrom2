@@ -55,12 +55,12 @@
         </button>
         <button class="btn btn-secondary"
                 (click)=" openListarProductos(empresa)"
-                *ngIf="modoListaProductosEmpresa">
+                *ngIf="modoListaProductosEmpresa && (empresa.tipoEmpresa.clasificacion === 'PRODUCTOS' || empresa.tipoEmpresa.clasificacion === 'AMBOS')">
           Inventario de Productos
         </button>
         <button class="btn btn-secondary"
                 (click)=" openListarServicios(empresa)"
-                *ngIf="modoListaServiciosEmpresa">
+                *ngIf="modoListaServiciosEmpresa && (empresa.tipoEmpresa.clasificacion === 'SERVICIOS' || empresa.tipoEmpresa.clasificacion === 'AMBOS')">
           Catálogo de Servicios
         </button>
       </div>
