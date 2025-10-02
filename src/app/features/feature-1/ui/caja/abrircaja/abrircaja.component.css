@@ -1,0 +1,117 @@
+/* Centrar el contenido en la pantalla de la aplicación */
+.container-center {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alineación al inicio para no depender de la altura de la ventana */
+    padding-top: 50px; /* Espacio superior para que no esté pegado al menú superior */
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Estilo principal de la tarjeta */
+.card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+/* Encabezado y Bienvenida */
+.header-content {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 25px;
+}
+.welcome-message {
+    color: #34495e;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    font-weight: 500;
+    display: block;
+}
+.secondary-text {
+    font-size: 0.95rem;
+    color: #7f8c8d;
+}
+.user-name {
+    color: #2c3e50;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+.box-title {
+    font-size: 2rem;
+    color: #2980b9; /* Azul de marca */
+    margin-top: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon-cash {
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+/* Grupos de Formulario y Campos */
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+.input-group label {
+    display: block;
+    color: #34495e;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    resize: none; /* Evita redimensionar el textarea */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.input-group input:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+textarea {
+    height: 80px;
+}
+.help-text {
+    font-size: 0.8rem;
+    color: #95a5a6;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Botón de Acción */
+.btn-open {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    /* Degradado de verde para acción principal y éxito */
+    background-image: linear-gradient(to right, #2ecc71, #27ae60);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.btn-open:hover {
+    background-image: linear-gradient(to right, #27ae60, #2ecc71);
+}
+.icon-lock {
+    margin-right: 8px;
+}

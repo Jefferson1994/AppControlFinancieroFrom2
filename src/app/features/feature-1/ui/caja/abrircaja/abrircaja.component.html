@@ -1,0 +1,43 @@
+<div class="container-center">
+    <div class="card">
+        <div class="header-content">
+            <span class="welcome-message">¡Hola de nuevo, <span class="user-name">[Nombre Colaborador]</span>!</span>
+            <span class="welcome-message secondary-text">Estás a punto de abrir la caja de <span class="user-name">[Nombre Empresa]</span>.</span>
+
+            <div class="box-title">
+                <i class="icon-cash">💵</i> Apertura de Caja
+            </div>
+        </div>
+
+        <form #abrirCajaForm="ngForm" (ngSubmit)="onAbrirCaja()">
+
+          <div class="input-group">
+            <label for="monto-inicial">Monto Inicial en Efectivo ($)</label>
+            <input
+              type="number"
+              id="monto-inicial"
+              placeholder="Escriba el monto inicial (ej: 10.00)"
+              required
+              min="0"
+              step="0.01"
+              name="montoInicial"
+              [(ngModel)]="montoInicial"> </div>
+
+          <div class="input-group">
+            <label for="observaciones">Observaciones (Opcional)</label>
+            <textarea
+              id="observaciones"
+              placeholder="Ej: 'Fondo para cambios', 'Turno matutino'"
+              name="observaciones"
+              [(ngModel)]="observaciones"></textarea> <small class="help-text">Máximo 250 caracteres.</small>
+          </div>
+
+          <button
+            type="submit"
+            class="btn-open"
+            [disabled]="cargando || !abrirCajaForm.valid"> <i class="icon-lock">🔒</i> Abrir Caja
+          </button>
+
+        </form>
+    </div>
+</div>

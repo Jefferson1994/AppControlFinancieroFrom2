@@ -73,8 +73,16 @@ navItems = [
         { name: 'Crear Servicio', view: 'seleccionarEmpresaServicio' }
       ]
   },
-
-
+    {
+    name: 'Caja',
+    view: 'Caja',
+    svgPath: 'M17,17.42L12.45,14.11L12,14.3L7.55,17.42L6,16.5L12,12L18,16.5M19,21H5A2,2 0 0,1 3,19V7A2,2 0 0,1 5,5H19A2,2 0 0,1 21,7V19A2,2 0 0,1 19,21M19,7H5V19H19V7M9,9H7V11H9V9M13,9H11V11H13V9M17,9H15V11H17V9Z', // Ícono de portapapeles
+    subItems: [
+        { name: 'Abrir caja', view: 'abrirCaja' },
+        { name: 'Registrar Ingresos/Egresos', view: 'movimientosCaja' },
+        { name: 'Cerrar caja', view: 'cerraCaja' }
+      ]
+  },
   // 6. Reportes
   {
     name: 'Reportes',
@@ -85,7 +93,6 @@ navItems = [
         { name: 'Reporte de Clientes', view: 'reporte_clientes' }
       ]
   },
-
   // 7. Facturas
   {
     name: 'Facturas',

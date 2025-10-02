@@ -12,6 +12,10 @@ import { RouterModule } from '@angular/router';
 import { VerEmpresaDetalleComponent } from './features/feature-1/ui/Admin/ver-empresa-detalle/ver-empresa-detalle.component';
 import { ListarProductosComponent } from './features/feature-1/ui/Admin/listar-productos/listar-productos.component';
 import { ListarServiciosComponent } from './features/feature-1/ui/Admin/listar-servicios/listar-servicios.component';
+import { AbrircajaComponent } from './features/feature-1/ui/caja/abrircaja/abrircaja.component';
+import { MovimientoscajaComponent } from './features/feature-1/ui/caja/movimientoscaja/movimientoscaja.component';
+import { CerrarcajaComponent } from './features/feature-1/ui/caja/cerrarcaja/cerrarcaja.component';
+
 
 
 export const routes: Routes = [
@@ -51,9 +55,12 @@ export const routes: Routes = [
       { path: 'verTodasColaboradores/:id_empresa', component: ListarColaboradoresComponent },
       { path: 'verTodosProductos/:id_empresa', component: ListarProductosComponent },
       { path: 'verTodosServicios/:id_empresa', component: ListarServiciosComponent },
+      { path: 'abrirCaja', component: AbrircajaComponent },
+      { path: 'movimientosCaja', component: MovimientoscajaComponent },
+      { path: 'cerraCaja', component: CerrarcajaComponent },
     ],
   }
-  
+
 
 ];
 
