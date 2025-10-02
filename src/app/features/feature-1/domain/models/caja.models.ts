@@ -49,3 +49,57 @@ export interface CrearVentaPayload {
   items: ItemVentaPayload[];
 }
 
+
+/**
+ * Describe un único ítem (producto o servicio) dentro del detalle de la venta.
+ */
+export interface VentaDetalle {
+  id: number;
+  id_producto: number | null;
+  id_servicio: number | null;
+  nombre_producto: string;
+  cantidad: number;
+  precio_unitario: number;
+  subtotal: number;
+  id_venta: number;
+}
+
+
+export interface Venta {
+  id: number;
+  id_negocio: number;
+  id_colaborador: number;
+  id_cliente: number;
+  id_metodo_pago_principal: number;
+  tipo_comprobante: string;
+  numero_comprobante: string;
+  fecha_venta: string; // O Date si se transforma
+  subtotal: number;
+  iva: number;
+  total: number;
+  observaciones: string;
+  estado: string;
+  detalles: VentaDetalle[]; // Un array de los ítems de la venta
+}
+
+
+export interface MovimientoCajaRegistrado {
+  id: number;
+  id_caja: number;
+  monto: number;
+  id_tipo_movimiento_caja: number;
+  id_metodo_pago: number;
+  id_venta: number;
+  detalle: string;
+  id_factura: number | null;
+  creado_en: string; // O Date si se transforma
+}
+
+
+export interface RespuestaVentaProcesada {
+  mensaje: string;
+  venta: Venta;
+  movimientoCaja: MovimientoCajaRegistrado;
+  DocumentoVenta: string;
+}
+

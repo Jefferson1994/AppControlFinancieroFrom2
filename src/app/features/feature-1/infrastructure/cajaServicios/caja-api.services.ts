@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { AperturaCajaPayload,AperturaCajaResponse,Caja} from '../../domain/models/caja.models';
+import { AperturaCajaPayload,AperturaCajaResponse,Caja, CrearVentaPayload, RespuestaVentaProcesada} from '../../domain/models/caja.models';
 import { cajaRepositorio } from '../../domain/repositories/cajaRepositories/caja.repository';
 
 @Injectable({
@@ -26,6 +26,20 @@ export class UserCajaRepository implements cajaRepositorio {
         throw error;
       }
   }
+
+  /*async ProcesarventaCaja(cajaEmpresa: CrearVentaPayload ): Promise<RespuestaVentaProcesada> {
+      const url = `${this.baseUrl}caja/abrirCaja`;
+      try {
+        const response = await lastValueFrom(
+
+        this.http.post<{ respuestaCaja: RespuestaVentaProcesada }>(url, cajaEmpresa)
+        );
+
+        return response;
+      } catch (error) {
+        throw error;
+      }
+  }*/
 
   
   
