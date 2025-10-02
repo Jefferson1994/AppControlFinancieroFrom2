@@ -1,7 +1,9 @@
 import { UserCredentials,UserResponse,UserCredentialsBuscar,BuscarColaboradorResponse,
   CrearUsuarioDTO,CrearUsuarioResponse,RolUsuario,
   ValidacionRequest,
-  ValidacionResponse
+  ValidacionResponse,
+  RespuestaNegociosVinculados,
+  NegocioVinculado
  } from '../../models/userModelos';
 
 export interface UserRepositorio {
@@ -10,5 +12,6 @@ export interface UserRepositorio {
   CrearUsuario(crearUsario: CrearUsuarioDTO): Promise<CrearUsuarioResponse>;
   RolesActivos(): Promise<RolUsuario[]>;
   BuscarCiudadano(userBuscar: ValidacionRequest): Promise<ValidacionResponse>
+  usuarioEmpresasVinculadas(): Promise<RespuestaNegociosVinculados>
 }
 

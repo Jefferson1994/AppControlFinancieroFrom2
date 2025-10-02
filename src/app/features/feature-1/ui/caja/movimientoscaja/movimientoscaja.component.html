@@ -1,1 +1,100 @@
-<p>movimientoscaja works!</p>
+<div class="venta-container">
+
+  <div class="catalogo-panel">
+    <div class="tabs">
+      <button class="tab-button" 
+              [class.active]="vistaActiva === 'servicios'" 
+              (click)="seleccionarVista('servicios')">Servicios</button>
+      <button class="tab-button" 
+              [class.active]="vistaActiva === 'productos'" 
+              (click)="seleccionarVista('productos')">Productos</button>
+    </div>
+
+    <input type="text" class="search-bar" placeholder="Buscar por nombre..." 
+           [(ngModel)]="terminoBusqueda" 
+           (input)="filtrarItems()">
+    
+    <div class="items-grid">
+      @if (vistaActiva === 'servicios') {
+        @for (servicio of serviciosFiltrados; track servicio.id) {
+          <div class="item-card" (click)="agregarItem(servicio, 'servicio')">
+            <span class="item-name">{{ servicio.nombre }}</span>
+            <span class="item-price">{{ servicio.precio | currency }}</span>
+          </div>
+        }
+      }
+
+      @if (vistaActiva === 'productos') {
+        @for (producto of productosFiltrados; track producto.id) {
+          <div class="item-card" (click)="agregarItem(producto, 'producto')">
+            <span class="item-name">{{ producto.nombre }}</span>
+            <span class="item-price">{{ producto.precio_venta | currency }}</span>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="ticket-panel">
+    <div class="ticket-header">
+      <h3>Ticket de Venta</h3>
+    </div>
+
+    <div class="ticket-items">
+      @for (item of itemsVenta; track $index) {
+        <div class="ticket-item">
+          <span class="item-name">{{ item.nombre }}</span>
+          <div class="quantity-controls">
+            <button (click)="decrementarCantidad(item)">-</button>
+            <input type="number" [value]="item.cantidad" readonly>
+            <button (click)="incrementarCantidad(item)">+</button>
+          </div>
+          <span class="item-subtotal">{{ item.precio * item.cantidad | currency }}</span>
+          <button class="remove-item" (click)="removerItem(item)">❌</button>
+        </div>
+      } @empty {
+        <p class="empty-ticket">Selecciona un servicio o producto para empezar.</p>
+      }
+    </div>
+
+    @if (itemsVenta.length > 0) {
+      <div class="ticket-summary">
+        <div class="summary-row">
+          <span>Subtotal:</span>
+          <span>{{ subtotal | currency }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Impuestos (IVA 12%):</span>
+          <span>{{ impuestos | currency }}</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total a Cobrar:</span>
+          <span>{{ total | currency }}</span>
+        </div>
+      </div>
+
+      <div class="checkout-options">
+        <h4>Opciones de la Venta</h4>
+        <div class="payment-methods">
+          <button class="payment-button" (click)="seleccionarMetodoPago(1)" [class.active]="id_metodo_pago_principal === 1">Efectivo</button>
+          <button class="payment-button" (click)="seleccionarMetodoPago(2)" [class.active]="id_metodo_pago_principal === 2">Tarjeta</button>
+        </div>
+        <div class="factura-check">
+          <input type="checkbox" id="requiere_factura" [(ngModel)]="requiereFactura">
+          <label for="requiere_factura">Requiere factura formal</label>
+        </div>
+      </div>
+
+      <button class="cobrar-button" 
+              [disabled]="itemsVenta.length === 0 || !id_metodo_pago_principal || procesandoCobro"
+              (click)="finalizarVenta()">
+        @if (procesandoCobro) {
+          <span>Procesando...</span>
+        } @else {
+          <span>Cobrar {{ total | currency }}</span>
+        }
+      </button>
+    }
+  </div>
+  
+</div>

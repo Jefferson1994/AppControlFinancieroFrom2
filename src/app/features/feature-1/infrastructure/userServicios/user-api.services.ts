@@ -6,7 +6,9 @@ import { UserCredentials, UserResponse,UserCredentialsBuscar,BuscarColaboradorRe
   CrearUsuarioDTO,CrearUsuarioResponse,
   RolUsuario,
   ValidacionRequest,
-  ValidacionResponse
+  ValidacionResponse,
+  RespuestaNegociosVinculados,
+  NegocioVinculado
  } from '../../domain/models/userModelos'; // Asegúrate de que los paths sean correctos
 import { UserRepositorio } from '../../domain/repositories/userRepositories/user.repository'; // El contrato del repositorio
 
@@ -102,4 +104,24 @@ export class UserApiRepository implements UserRepositorio {
         throw error;
       }
   }
+
+  async usuarioEmpresasVinculadas(): Promise<RespuestaNegociosVinculados> {
+    const url = `${this.baseUrl}api/empresasVinculadas`;
+
+    try {
+      const response = await lastValueFrom(
+        this.http.post<RespuestaNegociosVinculados>(url, null) // body vacío como null
+      );
+
+
+
+      return response;
+    } catch (error) {
+      console.error('Error en la llamada API listar todos los tipos de empresa:', error);
+      throw error;
+    }
+  }
+
+  // La función ahora promete devolver un ARREGLO de NegocioVinculado
+
 }

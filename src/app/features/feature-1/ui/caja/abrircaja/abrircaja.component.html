@@ -1,8 +1,21 @@
 <div class="container-center">
     <div class="card">
+      <div class="input-group" >
+        <label for="empresa-select">Seleccione la Empresa</label>
+        <select
+          id="empresa-select"
+          [(ngModel)]="empresaSeleccionada"
+          (change)="onEmpresaChangeId($event)"
+          name="empresaSeleccionada"
+          required>
+          <option *ngFor="let empresa of empresas" [ngValue]="empresa">
+            {{ empresa.nombre }}
+          </option>
+        </select>
+      </div>
         <div class="header-content">
-            <span class="welcome-message">¡Hola de nuevo, <span class="user-name">[Nombre Colaborador]</span>!</span>
-            <span class="welcome-message secondary-text">Estás a punto de abrir la caja de <span class="user-name">[Nombre Empresa]</span>.</span>
+            <span class="welcome-message">¡Hola de nuevo, <span class="user-name">{{ adminName() }}</span>!</span>
+            <span class="welcome-message secondary-text">Estás a punto de abrir la caja de la empresa <span class="user-name">{{ nombreEmpresaIndividual }}</span>.</span>
 
             <div class="box-title">
                 <i class="icon-cash">💵</i> Apertura de Caja
@@ -21,7 +34,10 @@
               min="0"
               step="0.01"
               name="montoInicial"
-              [(ngModel)]="montoInicial"> </div>
+              [(ngModel)]="montoInicial">
+             
+            
+            </div>
 
           <div class="input-group">
             <label for="observaciones">Observaciones (Opcional)</label>

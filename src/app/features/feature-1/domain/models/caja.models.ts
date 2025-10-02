@@ -24,10 +24,28 @@ export interface Caja {
   total_comisiones_generadas: number;
 }
 
-/**
- * Representa la respuesta completa del API al abrir una caja.
- */
+
 export interface AperturaCajaResponse {
   mensaje: string;
   caja: Caja;
 }
+
+
+export interface ItemVentaPayload {
+  id_producto?: number;
+  id_servicio?: number;
+  cantidad: number;
+  descripcion_adicional?: string;
+}
+
+
+export interface CrearVentaPayload {
+  id_caja: number;
+  id_colaborador: number;
+  id_metodo_pago_principal: number;
+  id_cliente: number | null;
+  requiere_factura_formal: boolean;
+  observaciones_venta?: string;
+  items: ItemVentaPayload[];
+}
+

@@ -105,3 +105,27 @@ export interface ValidacionRequest {
     tipo: string;
     identificacion: string;
 }
+
+
+export interface NegocioVinculado {
+  id: number;
+  nombre: string;
+  ruc: string;
+  codigo_establecimiento: string;
+  descripcion: string;
+  activo: number;
+  id_tipo_empresa: number;
+  id_datos_contacto: number;
+  direccion: string;
+  horario_apertura: string;
+  horario_cierre: string;
+  id_administrador: number;
+  creado_en: string; 
+}
+
+
+export interface RespuestaNegociosVinculados {
+  mensaje: string;
+  negocios: NegocioVinculado[];
+}
+
