@@ -2,18 +2,18 @@
 
   <div class="catalogo-panel">
     <div class="tabs">
-      <button class="tab-button" 
-              [class.active]="vistaActiva === 'servicios'" 
+      <button class="tab-button"
+              [class.active]="vistaActiva === 'servicios'"
               (click)="seleccionarVista('servicios')">Servicios</button>
-      <button class="tab-button" 
-              [class.active]="vistaActiva === 'productos'" 
+      <button class="tab-button"
+              [class.active]="vistaActiva === 'productos'"
               (click)="seleccionarVista('productos')">Productos</button>
     </div>
 
-    <input type="text" class="search-bar" placeholder="Buscar por nombre..." 
-           [(ngModel)]="terminoBusqueda" 
+    <input type="text" class="search-bar" placeholder="Buscar por nombre..."
+           [(ngModel)]="terminoBusqueda"
            (input)="filtrarItems()">
-    
+
     <div class="items-grid">
       @if (vistaActiva === 'servicios') {
         @for (servicio of serviciosFiltrados; track servicio.id) {
@@ -85,9 +85,9 @@
         </div>
       </div>
 
-      <button class="cobrar-button" 
+      <button class="cobrar-button"
               [disabled]="itemsVenta.length === 0 || !id_metodo_pago_principal || procesandoCobro"
-              (click)="finalizarVenta()">
+              (click)="procesarVenta()">
         @if (procesandoCobro) {
           <span>Procesando...</span>
         } @else {
@@ -96,5 +96,5 @@
       </button>
     }
   </div>
-  
+
 </div>

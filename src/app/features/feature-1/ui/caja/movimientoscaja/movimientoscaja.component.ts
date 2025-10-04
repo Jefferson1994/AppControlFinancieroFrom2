@@ -6,6 +6,8 @@ import { AlertService } from '../../../services/alert.service';
 import { LoadingService } from '../../../services/loading.service';
 import { Producto, Servicios } from '../../../domain/models/empresa.models';
 import{listarProductoxEmpresaUseCase} from '../../../domain/use-cases/empresa-caseEmpresa/listarProductosXempresa.use.case'
+import{procesarVentaUseCase} from '../../../domain/use-cases/caja-casaEmpresa/ventaCaja.use.case'
+import { CrearVentaPayload, ItemVentaPayload } from '../../../domain/models/caja.models';
 
 // Interfaz para dar una estructura clara a los ítems del ticket
 export interface ItemVenta {
@@ -49,23 +51,24 @@ export class MovimientoscajaComponent implements OnInit {
   procesandoCobro = false;
 
   constructor(private ListarServiciosxEmpresaUseCase:listarServiciosxEmpresaUseCase,
-    private ListarProductoxEmpresaUseCase :listarProductoxEmpresaUseCase
+    private ListarProductoxEmpresaUseCase :listarProductoxEmpresaUseCase,
+    private procesarVentaUseCase: procesarVentaUseCase
     ){
-  
+
   }
-  
+
 
   async ngOnInit(): Promise<void>{
     // Cargamos los datos de prueba
     this.filtrarItems();
-    this.cargarServicios(1010);
-    this.cargarProductos(1010);
+    this.cargarServicios(14);
+    this.cargarProductos(14);
   }
 
 
   async cargarServicios(idEmpresa: number): Promise<void> {
     try {
-      this.loading = true;      
+      this.loading = true;
       this.loadingService.show();
       const respuesta = await this.ListarServiciosxEmpresaUseCase.execute(idEmpresa);
       this.servicios = respuesta.servicios;
@@ -113,12 +116,23 @@ export class MovimientoscajaComponent implements OnInit {
 
   agregarItem(item: any, tipo: 'servicio' | 'producto'): void {
     const itemExistente = this.itemsVenta.find(i => i.id === item.id && i.tipo === tipo);
+
     if (itemExistente) {
+      // ✅ CORRECCIÓN 1: Se incrementa la cantidad solo una vez.
       itemExistente.cantidad++;
-      console.log('cantidad maxima de  items', itemExistente.cantidad++)
     } else {
-      this.itemsVenta.push({ id: item.id, tipo, nombre: item.nombre, precio: item.precio, cantidad: 1 });
+      // ✅ CORRECCIÓN 2: Se determina el precio correcto según el tipo.
+      const precioDelItem = tipo === 'servicio' ? item.precio : item.precio_venta;
+
+      this.itemsVenta.push({
+        id: item.id,
+        tipo,
+        nombre: item.nombre,
+        precio: precioDelItem, // Se usa el precio correcto
+        cantidad: 1
+      });
     }
+
     this.calcularTotal();
   }
 
@@ -171,7 +185,7 @@ export class MovimientoscajaComponent implements OnInit {
 
   setTimeout(() => {
     alert(`Venta por ${this.total.toFixed(2)} procesada exitosamente!`);
-    
+
     this.itemsVenta = [];
     this.id_metodo_pago_principal = null;
     this.requiereFactura = false;
@@ -179,5 +193,105 @@ export class MovimientoscajaComponent implements OnInit {
     this.calcularTotal();
 
   }, 1500);
-}
+  }
+
+  async procesarVenta(): Promise<void> {
+    // 1. Validaciones iniciales
+    if (this.procesandoCobro || !this.id_metodo_pago_principal || this.itemsVenta.length === 0) {
+      this.alertService.showError('Asegúrate de agregar ítems y seleccionar un método de pago.');
+      return;
+    }
+
+    this.procesandoCobro = true;
+    this.loadingService.show();
+
+    // 2. "Traducir" el arreglo de items al formato del payload
+    const itemsParaPayload: ItemVentaPayload[] = this.itemsVenta.map(item => {
+      if (item.tipo === 'producto') {
+        return {
+          id_producto: item.id,
+          cantidad: item.cantidad
+        };
+      } else { // Si es 'servicio'
+        return {
+          id_servicio: item.id,
+          cantidad: item.cantidad
+        };
+      }
+    });
+
+    // 3. Construir el payload completo para el caso de uso
+    const payload: CrearVentaPayload = {
+      id_caja: 36,
+      id_colaborador: 11,
+      id_metodo_pago_principal: this.id_metodo_pago_principal,
+      id_cliente: 6,
+      requiere_factura_formal: this.requiereFactura,
+      observaciones_venta: "venta de prueba desde angular",
+      items: itemsParaPayload
+    };
+
+    console.log("--- ENVIANDO A LA API ---", payload);
+
+    try {
+      // 4. Llamar al caso de uso
+      const respuesta = await this.procesarVentaUseCase.execute(payload);
+      //console.log('Respuesta de la API:', JSON.stringify(respuesta));
+      this.alertService.showSuccess(respuesta.mensaje || 'Venta procesada exitosamente!');
+
+      if (respuesta.DocumentoVenta) {
+            const nombreArchivo = `Venta-${respuesta.venta.id}.pdf`;
+            this.descargarPdf(respuesta.DocumentoVenta, nombreArchivo);
+      }
+      //this.resetVenta();
+
+    } catch (error) {
+      console.error('Error al procesar la venta:', error);
+      this.alertService.showError('Ocurrió un error al procesar la venta.');
+    } finally {
+      this.procesandoCobro = false;
+      this.loadingService.hide();
+    }
+  }
+
+  // ✅ MÉTODO AUXILIAR PARA LIMPIAR
+  private resetVenta(): void {
+    this.itemsVenta = [];
+    this.id_metodo_pago_principal = null;
+    this.requiereFactura = false;
+    this.calcularTotal();
+  }
+
+  private descargarPdf(base64String: string, nombreArchivo: string): void {
+  try {
+    // 1. Decodifica el string Base64 a datos binarios.
+    const byteCharacters = atob(base64String);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+
+    // 2. Crea un "Blob" (un objeto tipo archivo) con los datos y el tipo correcto.
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+    // 3. Crea una URL temporal para el Blob.
+    const url = window.URL.createObjectURL(blob);
+
+    // 4. Crea un enlace <a> invisible en la página.
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = nombreArchivo;
+
+    // 5. Simula un clic en el enlace para iniciar la descarga.
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+    link.remove(); // Limpia el elemento del DOM
+
+  } catch (error) {
+    console.error('Error al descargar el PDF:', error);
+    this.alertService.showError('No se pudo generar el documento para descargar.');
+  }
+  }
 }

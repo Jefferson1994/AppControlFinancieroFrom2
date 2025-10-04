@@ -27,21 +27,18 @@ export class UserCajaRepository implements cajaRepositorio {
       }
   }
 
-  /*async ProcesarventaCaja(cajaEmpresa: CrearVentaPayload ): Promise<RespuestaVentaProcesada> {
-      const url = `${this.baseUrl}caja/abrirCaja`;
+  async ProcesarventaCaja(cajaEmpresa: CrearVentaPayload): Promise<RespuestaVentaProcesada> {
+      const url = `${this.baseUrl}caja/procesarVenta`;
       try {
-        const response = await lastValueFrom(
+          const response = await lastValueFrom(
+              this.http.post<RespuestaVentaProcesada>(url, cajaEmpresa)
+          );
+          return response;
 
-        this.http.post<{ respuestaCaja: RespuestaVentaProcesada }>(url, cajaEmpresa)
-        );
-
-        return response;
       } catch (error) {
-        throw error;
+          throw error;
       }
-  }*/
+  }
 
-  
-  
 
 }

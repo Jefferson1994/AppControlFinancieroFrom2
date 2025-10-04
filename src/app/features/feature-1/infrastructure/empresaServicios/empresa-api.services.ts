@@ -75,7 +75,7 @@ export class UserApiRepository implements empresaRepositorio {
         this.http.post<{ producto: CrearProductoResponse }>(url, producto)
       );
 
-     
+
       return response.producto;
     } catch (error) {
       // El repositorio solo relanza el error. La lógica de manejo
@@ -89,7 +89,7 @@ export class UserApiRepository implements empresaRepositorio {
     //const body = { CrearEmpresaDTO };
 
     try {
-      
+
       const response = await lastValueFrom(
         //this.http.post<{ empresas: EmpresasInterfas[] }>(url, body)
         this.http.post<{ servicio: CrearServicioResponse }>(url, servicio)
@@ -207,7 +207,7 @@ export class UserApiRepository implements empresaRepositorio {
       const response = await lastValueFrom(
         this.http.post<RespuestaServicios>(url, body)
       );
-
+      console.log("la respuesta del api de servicios",response)
       return response;
 
     } catch (error) {
