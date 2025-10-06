@@ -1,0 +1,175 @@
+
+  :root {
+    --color-bg-dark: #0f172a;
+    --color-primary: #7c3aed;
+    --color-text-gray: #6b7280;
+    --color-card-bg: #ffffff;
+  }
+
+  header {
+    background-color: var(--color-bg-dark);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  /* LOGO */
+  .logo-link {
+    font-weight: 800;
+    font-size: 1.75rem;
+    text-decoration: none;
+    color: white;
+  }
+  .logo-link::before {
+    content: "Mi";
+    color: var(--color-primary);
+  }
+
+  /* CONTENEDOR CENTRAL */
+  .search-container {
+    background-color: var(--color-card-bg);
+    flex-grow: 1;
+    max-width: 850px;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  /* CAMPO NOMBRE */
+  .search-field {
+    flex-grow: 1;
+    min-width: 200px;
+  }
+  .search-field label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-gray);
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+  }
+  .search-field input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1.1rem;
+    color: white;
+  }
+
+  /* BOTÓN BUSCAR */
+  .search-btn {
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    border: none;
+    border-radius: 0.75rem;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.15s ease;
+  }
+  .search-btn:hover {
+    transform: scale(1.05);
+  }
+
+  /* FILTROS */
+  .search-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+  }
+
+  .filter-item {
+    min-width: 140px;
+  }
+  .filter-item label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-gray);
+    margin-bottom: 0.25rem;
+  }
+  .filter-item select {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    color: #374151;
+    background: #f9fafb;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  .filter-item select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+  }
+
+  /* ACCIONES DERECHA */
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: auto;
+  }
+  .actions a {
+    color: #9ca3af;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .actions a:hover {
+    color: var(--color-primary);
+  }
+
+  .profile-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  @media (max-width: 1024px) {
+    header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .search-container {
+      flex-wrap: wrap;
+      justify-content: center;
+
+    }
+    .actions {
+      justify-content: flex-end;
+      margin-left: 0;
+      padding-top: 0.5rem;
+    }
+  }
+.search-segment input,
+.search-segment select {
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    width: 100%;
+
+    /* --- ESTILOS AÑADIDOS --- */
+    background-color: #ffffff; /* Fondo blanco */
+    color: #a0a0a0;            /* Color de texto gris claro para el placeholder */
+}

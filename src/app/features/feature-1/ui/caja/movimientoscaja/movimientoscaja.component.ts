@@ -222,7 +222,7 @@ export class MovimientoscajaComponent implements OnInit {
 
     // 3. Construir el payload completo para el caso de uso
     const payload: CrearVentaPayload = {
-      id_caja: 36,
+      id_caja: 37,
       id_colaborador: 11,
       id_metodo_pago_principal: this.id_metodo_pago_principal,
       id_cliente: 6,

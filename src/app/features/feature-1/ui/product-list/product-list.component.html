@@ -9,25 +9,15 @@
   </nav>
 </div>
 
-<div class="main-content">
-  <div class="map-container">
-    <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15949.61019183416!2d-79.91983057375276!3d-2.146602324673859!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x902d6db7b744046d%3A0xb004a43b879c29d0!2sGuayaquil%2C%20Ecuador!5e0!3m2!1sen!2sus!4v1695420138942!5m2!1sen!2sus"
-      width="100%"
-      height="100%"
-      style="border:0;"
-      allowfullscreen=""
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-    ></iframe>
-  </div>
+<main class="content-grid" >
+      <div class="results-container">
+        <app-lista-resultados></app-lista-resultados>
+      </div>
 
-  <div class="filter-container">
-    <input type="text" placeholder="Buscar por tipo de empresa" />
-    <input type="text" placeholder="Buscar por precio" />
-  </div>
-</div>
+      <div class="map-container" >
+          <app-mapa-resultados-busqueda [locations]="datosQuemados"></app-mapa-resultados-busqueda>
+      </div>
 
-<div class="footer">
-  <p>© 2024 Quiness. Todos los derechos reservados.</p>
-</div>
+</main>
+
+<app-fother-cliente></app-fother-cliente>

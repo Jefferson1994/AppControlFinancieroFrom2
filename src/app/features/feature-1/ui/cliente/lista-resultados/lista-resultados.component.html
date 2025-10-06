@@ -1,0 +1,37 @@
+<div class="results-list-container">
+  <div class="results-header">
+    <h2>Resultados Encontrados</h2>
+    </div>
+
+  <div class="results-grid">
+    @for (negocio of negocios; track negocio.id) {
+      <div class="business-card" (click)="seleccionarNegocio(negocio)">
+        <div class="card-image-container">
+          @if (negocio.imagenes && negocio.imagenes.length > 0) {
+            <img [src]="negocio.imagenes[0].url_imagen | safeUrl" alt="Imagen de {{ negocio.nombre }}">
+          } @else {
+            <img src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Sin imagen">
+          }
+          <button class="card-favorite-btn">&hearts;</button>
+        </div>
+        <div class="card-content">
+          <div class="card-header">
+            <h3>{{ negocio.nombre }}</h3>
+            <span class="card-rating">⭐ 4.9</span> </div>
+          <p class="card-details">{{ negocio.tipoEmpresa.nombre }} • {{ negocio.datosContactoEmpresa.ciudad }}</p>
+          @if (negocio.tipoEmpresa.clasificacion=='AMBOS') {
+              <p class="card-price">Servicios desde $10.00</p>
+              <p class="card-price">Productos desde desde $10.00</p>
+          } @else if (negocio.tipoEmpresa.clasificacion=='SERVICIOS') {
+              <p class="card-price">Servicios desde $10.00</p>
+          } @else if (negocio.tipoEmpresa.clasificacion=='PRODUCTOS') {
+              <p class="card-price">Productos desde desde $10.00</p>
+          }
+
+        </div>
+      </div>
+    } @empty {
+      <p>No se encontraron resultados para tu búsqueda.</p>
+    }
+  </div>
+</div>

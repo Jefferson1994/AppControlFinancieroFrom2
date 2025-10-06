@@ -49,9 +49,15 @@ export class LoginAppComponent {
       if (response.user.rol.nombre === 'Administrador') {
         console.log('Redirigiendo a la página de administrador...');
         this.router.navigate(['/admin-dashboard']);
-      } else {
-        console.log('Redirigiendo a la página por defecto...');
-        this.router.navigate(['/productos']);
+      } else if (response.user.rol.nombre === 'Colaborador') {
+        console.log('esta en la pagina del Colaborador');
+        this.router.navigate(['/admin-dashboard']);
+      } else if (response.user.rol.nombre === 'Admin Sistema') {
+        console.log('esta en la pagina del Admin Sistema');
+        this.router.navigate(['/admin-dashboard']);
+      }else if (response.user.rol.nombre === 'Cliente') {
+        console.log('esta en la pagina del Cliente');
+        this.router.navigate(['/Cliente-dashboard']);
       }
 
     } catch (error) {

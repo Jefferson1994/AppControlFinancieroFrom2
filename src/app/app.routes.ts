@@ -15,8 +15,11 @@ import { ListarServiciosComponent } from './features/feature-1/ui/Admin/listar-s
 import { AbrircajaComponent } from './features/feature-1/ui/caja/abrircaja/abrircaja.component';
 import { MovimientoscajaComponent } from './features/feature-1/ui/caja/movimientoscaja/movimientoscaja.component';
 import { CerrarcajaComponent } from './features/feature-1/ui/caja/cerrarcaja/cerrarcaja.component';
+import {DashboardClienteComponent } from './features/feature-1/ui/cliente/dashboard-cliente/dashboard-cliente.component';
+import {EmpresaDetalleComponent } from './features/feature-1/ui/cliente/empresa-detalle/empresa-detalle.component';
+import {FinalizarReservaComponent } from './features/feature-1/ui/cliente/finalizar-reserva/finalizar-reserva.component';
 
-
+import {ListaResultadosComponent } from './features/feature-1/ui/cliente/lista-resultados/lista-resultados.component';
 
 export const routes: Routes = [
   {
@@ -58,6 +61,16 @@ export const routes: Routes = [
       { path: 'abrirCaja', component: AbrircajaComponent },
       { path: 'movimientosCaja', component: MovimientoscajaComponent },
       { path: 'cerraCaja', component: CerrarcajaComponent },
+    ],
+  },
+   {
+    path: 'Cliente-dashboard',
+    component: DashboardClienteComponent,
+    children: [
+      { path: '', redirectTo: 'listaEmpresa', pathMatch: 'full' },
+      { path: 'listaEmpresa', component:ListaResultadosComponent  },
+      { path: 'empresaDetalle/:id', component: EmpresaDetalleComponent },
+      { path: 'finalizar-reserva', component: FinalizarReservaComponent },
     ],
   }
 

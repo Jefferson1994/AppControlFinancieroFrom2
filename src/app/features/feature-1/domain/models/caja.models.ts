@@ -50,9 +50,6 @@ export interface CrearVentaPayload {
 }
 
 
-/**
- * Describe un único ítem (producto o servicio) dentro del detalle de la venta.
- */
 export interface VentaDetalle {
   id: number;
   id_producto: number | null;
@@ -101,5 +98,66 @@ export interface RespuestaVentaProcesada {
   venta: Venta;
   movimientoCaja: MovimientoCajaRegistrado;
   DocumentoVenta: string;
+}
+
+
+export interface CierreCajaPayload {
+    id_caja: number;
+    id_negocio: number;
+    total_final_efectivo: number;
+    observaciones?: string; 
+}
+
+
+
+export interface ColaboradorResponse {
+    id: number;
+    id_usuario: number;
+    id_negocio: number;
+    porcentaje_ganancia: number;
+    codigo_punto_emision_movil: string;
+    activo: boolean;
+    vacaciones: boolean;
+}
+
+export interface NegocioResponse {
+    id: number;
+    nombre: string;
+    ruc: string;
+    codigo_establecimiento: string;
+    descripcion: string;
+    activo: number;
+    id_tipo_empresa: number;
+    id_datos_contacto: number;
+    direccion: string;
+    horario_apertura: string;
+    horario_cierre: string;
+    id_administrador: number;
+    creado_en: string;
+}
+
+export interface CajaCerradaResponse {
+    id: number;
+    id_Colaborador: number;
+    id_negocio: number;
+    fecha_apertura: string;
+    fecha_cierre: string;
+    monto_inicial: number;
+    total_esperado: number;
+    total_calculado: number;
+    total_real: number;
+    sobrante: number;
+    faltante: number;
+    total_comisiones_generadas: number;
+    observaciones: string;
+    estado: number;
+    Colaborador: ColaboradorResponse;
+    negocio: NegocioResponse;
+}
+
+
+export interface CierreCajaAPIResponse {
+    mensaje: string;
+    caja: CajaCerradaResponse;
 }
 

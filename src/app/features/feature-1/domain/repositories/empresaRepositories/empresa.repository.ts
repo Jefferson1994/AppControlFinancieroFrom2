@@ -9,7 +9,8 @@ import { EmpresasInterfas,CrearEmpresaDTO,CrearEmpresaResponse,
   TipoServicio,
   TipoEmpresa,
   RespuestaColaboradores,
-  RespuestaDesvincular} from '../../models/empresa.models';
+  RespuestaDesvincular,
+  buscarempresaPorUbicacionDTO} from '../../models/empresa.models';
 
 export interface empresaRepositorio {
   todasEmpresasXAdmin(idAdministrador: number,token: string): Promise<EmpresasInterfas[]>;
@@ -17,7 +18,7 @@ export interface empresaRepositorio {
   //CrearProducto(producto: CrearProductoDTO): Promise<CrearProductoResponse>;
   CrearProducto(producto: FormData): Promise<CrearProductoResponse>
   //CrearServicio(producto: CrearServicioDTO): Promise<CrearServicioResponse>;
-  CrearServicio(servicio: FormData): Promise<CrearServicioResponse> 
+  CrearServicio(servicio: FormData): Promise<CrearServicioResponse>
   AgregarColaborador(AgregarColaborador: AgregarColaboradorDTO): Promise<AgregarColaboradorResponse>;
   todasEmpresasXID(idEmpresa: number): Promise<EmpresasInterfas>;
   actualizarEmpresa(empresa: ActualizarrEmpresaDTO,idEmpresa:number): Promise<CrearEmpresaResponse>;
@@ -31,5 +32,6 @@ export interface empresaRepositorio {
   desvincularColaboradoresXEmpresa(idEmpresa: number,id_usuario: number): Promise<RespuestaDesvincular>
   vacacionesColaboradoresXEmpresa(idEmpresa: number,id_usuario: number): Promise<RespuestaDesvincular>
   IntegrarvacacionesColaboradoresXEmpresa(idEmpresa: number,id_usuario: number): Promise<RespuestaDesvincular>
+  obtenerEmpresasCercanas(BuscarEmpresas: buscarempresaPorUbicacionDTO): Promise<EmpresasInterfas[]>
 }
 

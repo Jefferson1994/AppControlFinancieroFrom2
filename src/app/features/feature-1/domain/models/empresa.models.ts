@@ -1,3 +1,5 @@
+import e from "express";
+
 export interface EmpresasInterfas {
   id: number;
   nombre: string;
@@ -310,6 +312,12 @@ export interface RespuestaDesvincular {
   empleado: ColaboradorActualizado; // Objeto del colaborador actualizado
 }
 
+//
+export interface buscarempresaPorUbicacionDTO {
+  lat: number;
+  lng: number;
+  radio?: number;
+}
 
 
 

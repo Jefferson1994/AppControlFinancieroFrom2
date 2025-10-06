@@ -1,1 +1,52 @@
-<p>cerrarcaja works!</p>
+<div class="container-center">
+    <div class="card">
+        <div class="header-content">
+            <span class="welcome-message">¡Hola, <span class="user-name">Prueba</span>!</span>
+            <span class="welcome-message secondary-text">Finaliza tu turno en <span class="user-name">Prueba</span>.</span>
+
+            <div class="box-title title-close">
+                <i class="icon-cash">🔒</i> Cierre de Caja
+            </div>
+
+            <div class="total-esperado">
+                Total Esperado en Efectivo: <span class="monto-esperado">20</span>
+            </div>
+        </div>
+
+        <form #cerrarCajaForm="ngForm" (ngSubmit)="onCerrarCaja()">
+
+            <div class="input-group">
+                <label for="monto-final">Monto Contado en Efectivo ($)</label>
+                <input
+                    type="number"
+                    id="monto-final"
+                    placeholder="Ingrese el conteo físico de efectivo"
+                    required
+                    min="0"
+                    step="0.01"
+                    name="montoFinal"
+                    [(ngModel)]="total_final_efectivo"
+                >
+                <small class="help-text">Diferencia con Esperado: <span class="diferencia">15</span></small>
+            </div>
+
+            <div class="input-group">
+                <label for="observaciones-cierre">Observaciones del Cierre (Motivo de descuadre, etc.)</label>
+                <textarea
+                    id="observaciones-cierre"
+                    placeholder="Ej: 'Caja cuadrada', 'Descuadre de $2 por error de cambio'"
+                    name="observacionesCierre"
+                    [(ngModel)]="observacionesCierre"
+                ></textarea>
+                <small class="help-text">Máximo 250 caracteres.</small>
+            </div>
+
+            <button
+                type="submit"
+                class="btn-close"
+                [disabled]="!cerrarCajaForm.valid">
+                <i class="icon-lock-close">✅</i> Cerrar y Reportar Caja
+            </button>
+        </form>
+    </div>
+</div>

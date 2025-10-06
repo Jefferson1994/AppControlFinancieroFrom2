@@ -1,0 +1,106 @@
+<div class="checkout-container" *ngIf="reserva">
+
+  <div class="checkout-form">
+    <h1>Finaliza tu reserva</h1>
+
+    <section class="customer-details">
+      <h2>Tus Datos</h2>
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" value="Joseph" disabled>
+      </div>
+      <div class="form-group">
+        <label for="email">Correo Electrónico</label>
+        <input type="email" id="email" value="joseph.cliente@email.com" disabled>
+      </div>
+    </section>
+
+   <section class="payment-details">
+  <h2>Información de Pago</h2>
+
+  <div class="payment-options">
+    <div class="payment-method">
+      <input type="radio" id="saved-card" name="payment" value="saved" checked>
+      <label for="saved-card">
+        <div class="method-info">
+          <i class="fa-brands fa-cc-visa card-icon"></i>
+          <span>Visa terminada en <strong>4242</strong></span>
+        </div>
+        <span class="card-expiry">Expira 12/26</span>
+      </label>
+    </div>
+
+    <div class="payment-method">
+      <input type="radio" id="new-card" name="payment" value="new">
+      <label for="new-card">
+        <div class="method-info">
+          <i class="fa-solid fa-credit-card card-icon"></i>
+          <span>Añadir nueva tarjeta de crédito/débito</span>
+        </div>
+      </label>
+
+      <div class="new-card-form">
+        <div class="form-group full-width">
+          <label for="card-number">Número de la tarjeta</label>
+          <div class="card-input-wrapper">
+            <input type="tel" id="card-number" placeholder="0000 0000 0000 0000">
+            <i class="fa-brands fa-cc-visa card-brand-icon"></i>
+          </div>
+        </div>
+        <div class="form-group full-width">
+          <label for="card-holder">Nombre en la tarjeta</label>
+          <input type="text" id="card-holder" placeholder="Nombre Apellido">
+        </div>
+        <div class="form-group">
+          <label for="card-expiry">Vencimiento</label>
+          <input type="text" id="card-expiry" placeholder="MM/AA">
+        </div>
+        <div class="form-group">
+          <label for="card-cvc">CVC</label>
+          <input type="text" id="card-cvc" placeholder="123">
+        </div>
+      </div>
+    </div>
+
+    <div class="payment-method">
+      <input type="radio" id="paypal" name="payment" value="paypal">
+      <label for="paypal">
+        <div class="method-info">
+          <i class="fa-brands fa-paypal card-icon paypal"></i>
+          <span>Pagar con PayPal</span>
+        </div>
+      </label>
+    </div>
+  </div>
+</section>
+
+  </div>
+
+  <div class="checkout-summary">
+    <div class="summary-box">
+      <h3>Resumen de tu Reserva</h3>
+      <div class="summary-business">
+        <strong>{{ reserva.negocio.nombre }}</strong>
+        <p>{{ reserva.negocio.direccion }}</p>
+      </div>
+      <hr>
+      <div class="summary-item">
+        <span>{{ reserva.servicio.nombre }}</span>
+        <strong>${{ reserva.servicio.precio.toFixed(2) }}</strong>
+      </div>
+      <div class="summary-item date-time">
+        <span>Fecha y Hora</span>
+        <strong>{{ reserva.fecha }} a las {{ reserva.hora }}</strong>
+      </div>
+      <hr>
+      <div class="summary-total">
+        <span>Total a Pagar</span>
+        <strong>${{ reserva.servicio.precio.toFixed(2) }}</strong>
+      </div>
+      <button class="pay-button" (click)="procesarPago()">
+        Confirmar y Pagar
+      </button>
+    </div>
+  </div>
+
+</div>

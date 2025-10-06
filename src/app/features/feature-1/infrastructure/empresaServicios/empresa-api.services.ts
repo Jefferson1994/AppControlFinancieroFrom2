@@ -11,7 +11,8 @@ import { CrearEmpresaDTO,CrearEmpresaResponse, EmpresasInterfas
   TipoServicio,
   TipoEmpresa,
   RespuestaColaboradores,
-  RespuestaDesvincular
+  RespuestaDesvincular,
+  buscarempresaPorUbicacionDTO
 } from '../../domain/models/empresa.models'; // Asegúrate de que los paths sean correctos
 import { empresaRepositorio } from '../../domain/repositories/empresaRepositories/empresa.repository'; // El contrato del repositorio
 
@@ -338,6 +339,22 @@ export class UserApiRepository implements empresaRepositorio {
     } catch (error) {
 
       console.error('Error en la llamada API ListaServiciosXEmpresa:', error);
+      throw error;
+    }
+  }
+
+  // empresas para que pueda ver el clienete de acuerdo a su ubicacion
+  async obtenerEmpresasCercanas(BuscarEmpresas: buscarempresaPorUbicacionDTO): Promise<EmpresasInterfas[]> {
+    const url = `${this.baseUrl}empresa/empresasCercanasXCliente`;
+    console.log('en el api todas las empresa')
+
+    try {
+      const response = await lastValueFrom(
+        this.http.post<{ empresa: EmpresasInterfas[] }>(url, BuscarEmpresas)
+      );
+      console.log('la respuesta del api de empresas cercanas',JSON.stringify(response.empresa))
+      return response.empresa;
+    } catch (error) {
       throw error;
     }
   }

@@ -1,0 +1,18 @@
+<div class="page-container">
+  <div class="head-container">
+     <app-head-cliente></app-head-cliente>
+  </div>
+  <br>
+  <main class="content-grid" [class.full-width]="esVistaDeDetalle">
+      <div class="results-container">
+           <router-outlet></router-outlet>
+      </div>
+      @if (!esVistaDeDetalle) {
+      <div class="map-container" >
+          <app-mapa-resultados-busqueda [locations]="locationsParaMapa"></app-mapa-resultados-busqueda>
+      </div>
+      }
+  </main>
+  <br>
+  <app-fother-cliente></app-fother-cliente>
+</div>

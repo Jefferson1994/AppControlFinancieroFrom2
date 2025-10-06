@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { AperturaCajaPayload,AperturaCajaResponse,Caja, CrearVentaPayload, RespuestaVentaProcesada} from '../../domain/models/caja.models';
+import { AperturaCajaPayload,AperturaCajaResponse,Caja, CierreCajaAPIResponse, CierreCajaPayload, CrearVentaPayload, RespuestaVentaProcesada} from '../../domain/models/caja.models';
 import { cajaRepositorio } from '../../domain/repositories/cajaRepositories/caja.repository';
 
 @Injectable({
@@ -37,6 +37,21 @@ export class UserCajaRepository implements cajaRepositorio {
 
       } catch (error) {
           throw error;
+      }
+  }
+
+
+  async CerrarCajaEmpresa(cajaEmpresa: CierreCajaPayload ): Promise<CierreCajaAPIResponse> {
+      const url = `${this.baseUrl}caja/cerrarCaja`;
+      try {
+        const response = await lastValueFrom(
+
+        this.http.post<{ caja: CierreCajaAPIResponse }>(url, cajaEmpresa)
+        );
+
+        return response.caja;
+      } catch (error) {
+        throw error;
       }
   }
 
