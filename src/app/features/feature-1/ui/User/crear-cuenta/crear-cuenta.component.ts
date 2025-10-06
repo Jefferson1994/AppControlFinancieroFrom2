@@ -116,13 +116,18 @@ export class CrearCuentaComponent implements OnInit  {
 
         // 3. Ejecutar el caso de uso
         const respuesta = await this.BuscarUserCiudadanoUseCase.execute(request);
+        console.log('la nueva respuesta', JSON.stringify(respuesta))
 
-        // 4. Manejar la respuesta
         if (respuesta.ok && respuesta.datos) {
           this.ciudadanoValidado = respuesta.datos;
-          this.registro.nombre = this.ciudadanoValidado.Nombres + ' '+ this.ciudadanoValidado.Nombres + ' '+respuesta.datos.fechaNacimiento+ ' '+respuesta.datos.edad;
+          
+          const datos = respuesta.datos;
+          if (datos.fechaDefuncion) {
+              this.alertService.showError('Número de CI de una persona fallecida.');
+              return;        
+          }
+          this.registro.nombre = datos.nombreCompleto || `${datos.Nombres} ${datos.Apellidos}`;  
           console.log('Ciudadano validado:', this.ciudadanoValidado);
-          // Aquí podrías autocompletar otros campos del formulario
         } else {
           this.errorValidacion = 'La identificación no es válida o no se encontró.';
         }
