@@ -103,3 +103,102 @@ h2 {
   background-color: #ecf0f1;
   color: #34495e;
 }
+/* --- Galería de Imágenes --- */
+.image-gallery {
+  display: grid;
+  /* --- ¡AQUÍ ESTÁ EL ÚNICO CAMBIO! --- */
+  /* Aumentamos el tamaño mínimo de 120px a 180px para crear menos columnas y más grandes. */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+/* --- Contenedor de cada imagen (para posicionar el botón) --- */
+.image-item {
+  position: relative;
+  /* Truco para hacer los contenedores cuadrados */
+  width: 100%;
+  padding-top: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #e9ecef; /* Color de fondo mientras carga la imagen */
+}
+
+/* --- La imagen en sí --- */
+.image-item img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen llene el espacio sin deformarse */
+}
+
+/* --- Botón de Eliminar --- */
+.delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%; /* Lo hace redondo */
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0; /* Oculto por defecto */
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Muestra el botón cuando el mouse está sobre la imagen */
+.image-item:hover .delete-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.delete-btn:hover {
+  background-color: #e53935; /* Rojo al pasar el mouse */
+}
+
+/* --- Estilos para el botón de 'Añadir nueva' --- */
+.image-item.add-new {
+  border: 2px dashed #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.add-btn {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  font-size: 3rem;
+  color: #ccc;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 1;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.add-new:hover {
+  border-color: #007bff;
+}
+
+.add-new:hover .add-btn {
+  color: #007bff;
+}

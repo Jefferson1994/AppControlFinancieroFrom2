@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit,EventEmitter,Output } from '@angular/core';
+import { Component, OnInit,EventEmitter,Output, Input, SimpleChanges } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 
 @Component({
@@ -11,6 +11,12 @@ import { GoogleMap } from '@angular/google-maps';
   styleUrl: './component-mapa-registro.component.scss'
 })
 export class ComponentMapaRegistroComponent implements OnInit {
+
+    // --- NUEVOS INPUTS para recivir data ---
+    @Input() initialLocation: { lat: number, lng: number } | null = null;
+    @Input() isDraggable: boolean = false; // Por defecto, no es arrastrable
+
+
 
     @Output() locationSelected = new EventEmitter<{
     lat: number;
@@ -45,34 +51,49 @@ export class ComponentMapaRegistroComponent implements OnInit {
   }
 
   initMap() {
-    this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+    /*this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
       center: this.center,
       zoom: this.zoom
-    });
+    });*/
+    this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+    center: this.initialLocation || this.center,
+    zoom: this.initialLocation ? 16 : 12
+  });
 
-    this.map.addListener('click', (event: google.maps.MapMouseEvent) => {
-      if (event.latLng) {
-        this.markerPosition = {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng()
-        };
+  // 2. Lógica para el marcador INICIAL. ESTA ES LA PARTE IMPORTANTE.
+  if (this.initialLocation) {
+    // Si al crear el mapa YA tenemos una ubicación, dibujamos el marcador.
+    console.log('initMap: Ubicación inicial encontrada. Dibujando marcador.');
+    this.placeMarker(this.initialLocation.lat, this.initialLocation.lng);
 
-        console.log('Marker Position:', this.markerPosition);
 
-        if (this.marker) {
-          this.marker.setMap(null); // Elimina el marcador anterior si existe
-        }
+  }else{
+      this.map.addListener('click', (event: google.maps.MapMouseEvent) => {
+            if (event.latLng) {
+              this.markerPosition = {
+                lat: event.latLng.lat(),
+                lng: event.latLng.lng()
+              };
 
-        this.marker = new google.maps.Marker({
-          position: this.markerPosition,
-          map: this.map,
-          draggable: false // Asegura que el marcador no se pueda arrastrar
-        });
+              console.log('Marker Position:', this.markerPosition);
 
-        // Obtiene el nombre del cantón y la provincia
-        this.getCantonAndProvinceName(this.markerPosition.lat, this.markerPosition.lng);
-      }
-    });
+              if (this.marker) {
+                this.marker.setMap(null); // Elimina el marcador anterior si existe
+              }
+
+              this.marker = new google.maps.Marker({
+                position: this.markerPosition,
+                map: this.map,
+                draggable: false // Asegura que el marcador no se pueda arrastrar
+              });
+
+              // Obtiene el nombre del cantón y la provincia
+              this.getCantonAndProvinceName(this.markerPosition.lat, this.markerPosition.lng);
+            }
+          });
+    }
+
+
   }
 
   /*getCantonAndProvinceName(lat: number, lng: number) {
@@ -191,9 +212,65 @@ export class ComponentMapaRegistroComponent implements OnInit {
   }
 
    private findAddressComponent(components: any[], type: string): string {
-    const component = components.find(c => c.types.includes(type));
-    return component ? component.long_name : 'N/A';
+      const component = components.find(c => c.types.includes(type));
+      return component ? component.long_name : 'N/A';
+    }
+
+    // para recivir mapa
+  // En component-mapa-registro.component.ts
+
+private placeMarker(lat: number, lng: number): void {
+  this.markerPosition = { lat, lng };
+
+  if (this.marker) {
+    this.marker.setMap(null);
   }
+
+  this.marker = new google.maps.Marker({
+    position: this.markerPosition,
+    map: this.map,
+    draggable: this.isDraggable // El estado inicial de 'draggable' se establece aquí
+  });
+
+  // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+  // Adjuntamos el listener SIEMPRE, sin importar si 'isDraggable' es true o false al inicio.
+  // El evento 'dragend' solo se disparará si el marcador tiene 'draggable: true'.
+  this.marker.addListener('dragend', (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      const newLat = event.latLng.lat();
+      const newLng = event.latLng.lng();
+      console.log('Nueva posición (arrastrada):', { newLat, newLng });
+
+      // Llamamos a la función que obtiene los datos y emite el evento
+      this.getCantonAndProvinceName(newLat, newLng);
+    }
+  });
+
+  // Obtenemos la dirección de la ubicación actual y la emitimos
+  this.getCantonAndProvinceName(lat, lng);
+}
+
+  ngOnChanges(changes: SimpleChanges): void {
+  // Si el mapa ya existe y el valor de 'initialLocation' ha cambiado
+  console.log('MAPA HIJO: ngOnChanges detectó cambios!', JSON.stringify(changes));
+    if (this.map && changes['initialLocation'] && !changes['initialLocation'].firstChange) {
+      if (this.initialLocation) {
+         console.log('entro')
+          this.placeMarker(this.initialLocation.lat, this.initialLocation.lng);
+          this.map.setCenter(this.initialLocation);
+      }
+    }
+
+    if (this.marker && changes['isDraggable']) {
+    const isNowDraggable = changes['isDraggable'].currentValue;
+    console.log(`MAPA HIJO: Cambiando estado 'draggable' a: ${isNowDraggable}`);
+
+    // Usamos el método setDraggable() del marcador para actualizarlo en tiempo real
+    this.marker.setDraggable(isNowDraggable);
+  }
+  }
+
+
 
 }
 

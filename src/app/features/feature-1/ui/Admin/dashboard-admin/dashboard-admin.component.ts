@@ -158,6 +158,16 @@ export class DashboardAdminComponent implements OnInit {
           { name: 'Generar Proforma', view: 'generar_proforma' }
         ],
       roles: ['Administrador', 'Colaborador']
+    },
+    {
+      name: 'Sucripción',
+      view: 'Sucripción',
+      svgPath: 'M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3s-3 1.34-3 3c0 .35.07.69.18 1H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 17H4V8h16v12z', // Ícono de portapapeles
+      subItems: [
+          { name: 'Ver Planes', view: 'ver_Sucripción' },
+          { name: 'Pagar suscripcion', view: 'generar_Sucripción' }
+        ],
+      roles: ['Administrador']
     }
   ];
 
